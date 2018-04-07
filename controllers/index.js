@@ -1,5 +1,5 @@
 const express = require('express'),
-      router = express.Router();
+      router = express.Router(),
       mysql = require('mysql2');
 
 if (process.env.NODE_ENV !== 'production') {
