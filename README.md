@@ -17,9 +17,11 @@ cs-4400-phase-3/
   README.md
   package.json
   controllers/
+  views/
   server.js
 ```
 * `/controllers` keeps all the controllers/routes.
+* `/views` has all the client-side files.
 * `server.js` is the node.js server entry file.
 
 You must **create a file `.env` in the root folder for environmental variables to connect to mySQL DB**
