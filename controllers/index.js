@@ -23,5 +23,13 @@ router.get('/', function(req, res) {
   res.render('main');
 });
 
+router.get('/visitor-register', function(req, res) {
+  res.render('visitorRegister');
+});
+
+router.get('/owner-register', function(req, res) {
+  res.render('ownerRegister');
+});
+
 
 module.exports = router;
