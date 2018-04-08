@@ -30,4 +30,5 @@ DB_HOST=value
 DB_USERNAME=value
 DB_PASSWORD=value
 DB_NAME=value
+SECRET_KEY=value
 ```
