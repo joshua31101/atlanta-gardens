@@ -20,7 +20,7 @@ db.connect((err) => {
 });
 
 router.get('/', function(req, res) {
-  res.render('main');
+  res.render('login');
 });
 
 
