@@ -20,7 +20,33 @@ db.connect((err) => {
 });
 
 router.get('/', function(req, res) {
+  if (req.session.user_type === 'admin') {
+    // Redirect to admin page
+    res.render('admin');
+  } else if (req.session.user_type === 'visitor') {
+    // Redirect to visitor page
+  } else if (req.session.user_type === 'owner') {
+    // Redirect to owner page
+  } else {
+    res.redirect('login');
+  }
+});
+
+router.get('/login', function(req, res) {
   res.render('login');
+});
+
+router.post('/login', function(req, res) {
+  // temp data for testing
+  req.session.user_id = 1;
+  req.session.user_type = 'admin';
+  res.redirect('/');
+});
+
+router.get('/logout', function(req, res) {
+  delete req.session.user_id;
+  delete req.session.user_type;
+  res.redirect('/login');
 });
 
 router.get('/visitor-register', function(req, res) {
@@ -28,6 +54,14 @@ router.get('/visitor-register', function(req, res) {
 });
 
 router.get('/owner-register', function(req, res) {
+  res.render('ownerRegister');
+});
+
+router.post('/visitor-register', function(req, res) {
+  res.render('visitorRegister');
+});
+
+router.post('/owner-register', function(req, res) {
   res.render('ownerRegister');
 });
 

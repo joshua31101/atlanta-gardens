@@ -6,48 +6,48 @@
 <body>
   <main class="ui container">
     <h1>New Owner Registration</h1>
-    <form class="ui form">
+    <form action="/owner-register" method="post" class="ui form">
       <div class="field">
         <label>Email</label>
-        <input for="" type="email" name="first-name" placeholder="Email">
+        <input type="email" name="email" placeholder="Email" required>
       </div>
       <div class="field">
         <label>Username</label>
-        <input for="" type="text" name="username" placeholder="Username">
+        <input type="text" name="username" placeholder="Username" required>
       </div>
       <div class="field">
         <label>Password</label>
-        <input for="" type="password" name="password" placeholder="Password">
+        <input type="password" name="password" placeholder="Password" required>
       </div>
       <div class="field">
         <label>Confirm Password</label>
-        <input for="" type="password" name="confirm-password" placeholder="Confirm Password">
+        <input type="password" name="confirm-password" placeholder="Confirm Password" required>
       </div>
       <div class="field">
         <label>Property Name</label>
-        <input for="" type="text" name="property-name" placeholder="Property Name">
+        <input type="text" name="property-name" placeholder="Property Name" required>
       </div>
       <div class="field">
         <label>Street Address</label>
-        <input for="" type="text" name="street-address" placeholder="Street Address">
+        <input type="text" name="street-address" placeholder="Street Address" required>
       </div>
       <div class="ui three column grid">
         <div class="field">
           <label>City</label>
-          <input for="" type="text" name="city" placeholder="City">
+          <input type="text" name="city" placeholder="City" required>
         </div>
         <div class="field">
           <label>Zip</label>
-          <input for="" type="number" name="zip" placeholder="Zip">
+          <input type="number" name="zip" placeholder="Zip" required>
         </div>
         <div class="field">
           <label>Acres</label>
-          <input for="" type="number" name="acres" placeholder="Acres">
+          <input type="number" name="acres" placeholder="Acres" required>
         </div>
       </div>
       <div class="field">
         <label>Property Type</label>
-        <select for="" name="property-type">
+        <select name="property-type">
           <option value="">Select</option>
           <option value="Garden">Garden</option>
           <option value="Farm">Farm</option>
@@ -56,7 +56,7 @@
       </div>
       <div class="field">
         <label>Crop</label>
-        <select for="" name="crop">
+        <select name="crop">
           <option value="">Select</option>
           <option value="fruit">fruit</option>
           <option value="vegetable">vegetable</option>
@@ -66,7 +66,7 @@
       </div>
       <div class="field">
         <label>Public</label>
-        <select for="" name="public">
+        <select name="public">
           <option value="">Select</option>
           <option value="true">Yes</option>
           <option value="false">No</option>
@@ -74,7 +74,7 @@
       </div>
       <div class="field">
         <label>Commercial</label>
-        <select for="" name="commercial">
+        <select name="commercial">
           <option value="">Select</option>
           <option value="true">Yes</option>
           <option value="false">No</option>
@@ -84,4 +84,9 @@
     </form>
   </main>
 </body>
+<script type="text/javascript">
+  $(document).ready(function()) {
+
+  });
+</script>
 </html>
