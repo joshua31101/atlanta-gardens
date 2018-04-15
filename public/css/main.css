@@ -1,0 +1,9 @@
+body {
+  background-color: #f7f7f7;
+}
+body > .grid {
+  height: 100%;
+}
+.column {
+  max-width: 450px;
+}

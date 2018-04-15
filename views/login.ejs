@@ -3,35 +3,44 @@
 <head>
   <% include partials/head %>
 </head>
-
 <body>
-  <main>
-    <div class="ui container">
-      <h1>Welcome to Atlanta Gardens, Farms, and Orchards</h1>
-      <div>
-        <form action="/login" method="post" class="ui form">
-          <div class="field">
-            <label>Email</label>
-            <input type="text" name="email" placeholder="Email">
-          </div>
-          <div class="field">
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Password">
-          </div>
-          <button class="ui button">Login</button>
-        </form>
-        <div class="ui divider"></div>
-        <div>
-          <a href="">
-            <button class="ui button">New Owner Registration</button>
-          </a>
-          <a href="">
-            <button class="ui button">New Visitor Registration</button>
-          </a>
+  <div class="ui middle aligned center aligned grid">
+    <div class="column">
+      <h2 class="ui blue image header">
+        <div class="content">
+          <h1>Welcome to Atlanta Gardens, Farms, and Orchards</h1>
+          <h3>Log-in to your account</h3>
         </div>
+      </h2>
+      <form action="/login" method="post" class="ui large form">
+        <div class="ui stacked segment">
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input type="text" name="email" placeholder="E-mail address">
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="lock icon"></i>
+              <input type="password" name="password" placeholder="Password">
+            </div>
+          </div>
+          <button class="ui fluid large blue submit button" type="submit">Login</button>
+        </div>
+
+        <div class="ui error message"></div>
+
+      </form>
+
+      <div class="ui message">
+        <a href="/owner-register">New Owner Sign Up</a>
+      </div>
+      <div class="ui message">
+        <a href="/visitor-register">New Visitor Sign Up</a>
       </div>
     </div>
+  </div>
 
-  </main>
 </body>
 </html>

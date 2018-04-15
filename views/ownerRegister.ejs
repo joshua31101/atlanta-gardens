@@ -2,36 +2,47 @@
 <html lang="en">
 <head>
   <% include partials/head %>
+  <style media="screen">
+    form {
+      text-align: left;
+    }
+  </style>
 </head>
 <body>
-  <main class="ui container">
-    <h1>New Owner Registration</h1>
-    <form action="/owner-register" method="post" class="ui form">
-      <div class="field">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Email" required>
-      </div>
-      <div class="field">
-        <label>Username</label>
-        <input type="text" name="username" placeholder="Username" required>
-      </div>
-      <div class="field">
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Password" required>
-      </div>
-      <div class="field">
-        <label>Confirm Password</label>
-        <input type="password" name="confirm-password" placeholder="Confirm Password" required>
-      </div>
-      <div class="field">
-        <label>Property Name</label>
-        <input type="text" name="property-name" placeholder="Property Name" required>
-      </div>
-      <div class="field">
-        <label>Street Address</label>
-        <input type="text" name="street-address" placeholder="Street Address" required>
-      </div>
-      <div class="ui three column grid">
+  <div class="ui center aligned grid ui basic segment">
+    <div class="column">
+      <h2 class="ui blue image header">
+        <div class="content">
+          <h1>Welcome to Atlanta Gardens, Farms, and Orchards</h1>
+          <h3>New Owner Registration</h3>
+        </div>
+      </h2>
+
+      <form action="/owner-register" method="post" class="ui form">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="username" placeholder="Username" required>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Password" required>
+        </div>
+        <div class="field">
+          <label>Confirm Password</label>
+          <input type="password" name="confirm-password" placeholder="Confirm Password" required>
+        </div>
+        <div class="field">
+          <label>Property Name</label>
+          <input type="text" name="property-name" placeholder="Property Name" required>
+        </div>
+        <div class="field">
+          <label>Street Address</label>
+          <input type="text" name="street-address" placeholder="Street Address" required>
+        </div>
         <div class="field">
           <label>City</label>
           <input type="text" name="city" placeholder="City" required>
@@ -44,48 +55,58 @@
           <label>Acres</label>
           <input type="number" name="acres" placeholder="Acres" required>
         </div>
+        <div class="field">
+          <label>Property Type</label>
+          <select name="property-type">
+            <option value="">Select</option>
+            <option value="Garden">Garden</option>
+            <option value="Farm">Farm</option>
+            <option value="Orchard">Orchard</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Crop</label>
+          <select name="crop">
+            <option value="">Select</option>
+            <option value="fruit">fruit</option>
+            <option value="vegetable">vegetable</option>
+            <option value="nut">nut</option>
+            <option value="flower">flower</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Public</label>
+          <select name="public">
+            <option value="">Select</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Commercial</label>
+          <select name="commercial">
+            <option value="">Select</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+        <button class="ui fluid large blue submit button" type="submit">Sign up</button>
+
+        <div class="ui error message"></div>
+
+      </form>
+
+      <div class="ui message">
+        <a href="/login">Go Back</a>
       </div>
-      <div class="field">
-        <label>Property Type</label>
-        <select name="property-type">
-          <option value="">Select</option>
-          <option value="Garden">Garden</option>
-          <option value="Farm">Farm</option>
-          <option value="Orchard">Orchard</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Crop</label>
-        <select name="crop">
-          <option value="">Select</option>
-          <option value="fruit">fruit</option>
-          <option value="vegetable">vegetable</option>
-          <option value="nut">nut</option>
-          <option value="flower">flower</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Public</label>
-        <select name="public">
-          <option value="">Select</option>
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Commercial</label>
-        <select name="commercial">
-          <option value="">Select</option>
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
-      </div>
-      <button class="ui primary button" type="submit">Submit</button>
-    </form>
-  </main>
+
+    </div>
+  </div>
+
+
 </body>
 <script type="text/javascript">
-  $(document).ready(function()) {
+  $(document).ready(function() {
 
   });
 </script>
