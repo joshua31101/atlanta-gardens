@@ -9,6 +9,11 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 app.use(session({
   secret: process.env.SECRET_KEY,
   resave: false,

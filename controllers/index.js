@@ -20,13 +20,18 @@ db.connect((err) => {
 });
 
 router.get('/', function(req, res) {
-  if (req.session.user_type === 'admin') {
-    // Redirect to admin page
-    res.render('admin');
-  } else if (req.session.user_type === 'visitor') {
-    // Redirect to visitor page
-  } else if (req.session.user_type === 'owner') {
-    // Redirect to owner page
+  // If logged in, then render home page
+  if (req.session.user_type) {
+    if (req.session.user_type === 'ADMIN') {
+      // Redirect to admin page
+      res.render('admin/index');
+    } else if (req.session.user_type === 'VISITOR') {
+      // Redirect to visitor page
+      res.render('visitor/index');
+    } else if (req.session.user_type === 'OWNER') {
+      // Redirect to owner page
+      res.render('owner/index');
+    }
   } else {
     res.redirect('login');
   }
@@ -37,14 +42,22 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/login', function(req, res) {
-  // temp data for testing
-  req.session.user_id = 1;
-  req.session.user_type = 'admin';
-  res.redirect('/');
+  const email = req.body.email;
+  const password = req.body.password;
+  const sql = `SELECT UserType FROM User WHERE email='${email}' AND Password=MD5('${password}')`;
+  console.log(sql);
+  db.query(sql, function(err, result) {
+    if (err) {
+      res.status(500).send({error: err});
+      return;
+    }
+    req.session.user_type = result[0].UserType;
+    res.redirect('/');
+  });
+
 });
 
 router.get('/logout', function(req, res) {
-  delete req.session.user_id;
   delete req.session.user_type;
   res.redirect('/login');
 });
@@ -63,10 +76,6 @@ router.post('/visitor-register', function(req, res) {
 
 router.post('/owner-register', function(req, res) {
   res.render('ownerRegister');
-});
-
-router.get('/owner', function(req, res) {
-  res.render('owner/index');
 });
 
 
