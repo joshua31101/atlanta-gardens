@@ -65,5 +65,9 @@ router.post('/owner-register', function(req, res) {
   res.render('ownerRegister');
 });
 
+router.get('/owner', function(req, res) {
+  res.render('owner/index');
+});
+
 
 module.exports = router;

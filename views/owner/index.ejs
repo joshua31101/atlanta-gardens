@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../partials/head %>
+</head>
+<body>
+  <div class="ui center aligned grid ui basic segment">
+    <h2 class="ui blue header">
+      <div class="content">
+        <h1>Welcome {owner}</h1>
+        <h2>Your Properties</h2>
+      </div>
+    </h2>
+
+    <table class="ui sortable celled table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>John</td>
+          <td>No Action</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>Jamie</td>
+          <td class="positive">Approved</td>
+          <td class="warning">Requires call</td>
+        </tr>
+        <tr>
+          <td>Jill</td>
+          <td class="negative">Denied</td>
+          <td>None</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr><th>3 People</th>
+        <th>2 Approved</th>
+        <th></th>
+      </tr></tfoot>
+    </table>
+
+
+  </div>
+
+</body>
+
+<script src="js/jquery-tablesort.js" charset="utf-8"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('table').tablesort();
+  });
+</script>
+
+</html>
