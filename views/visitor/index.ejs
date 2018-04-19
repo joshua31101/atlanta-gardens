@@ -8,12 +8,35 @@
   <div class="ui center aligned grid ui basic segment">
     <h2 class="ui blue header">
       <div class="content">
-        <h1>Welcome {visitor}</h1>
+        <h1>Welcome</h1>
+        <table class="ui sortable celled table">
+          <thead>
+            <tr>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (var i = 0; i < propertiesList.length; i++) { %>
+              <tr>
+                <th data-link="/properties/<%= propertiesList[i].ID %>"><%= propertiesList[i].Name %></th>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
       </div>
     </h2>
 
   </div>
 
 </body>
+
+<script>
+  $(document).ready(function() {
+    $('th').click(function(e) {
+      const propertyURL = e.target.dataset["link"];
+      document.location.href = propertyURL;
+    });
+  });
+</script>
 
 </html>

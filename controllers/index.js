@@ -15,6 +15,7 @@ router.use(require('./authenticate'));
 router.use('/visitor', authorize, require('./visitor'));
 router.use('/owner', authorize, require('./owner'));
 router.use('/admin', authorize, require('./admin'));
+router.use('/properties', authorize, require('./properties'));
 
 // Landing page
 router.get('/', function(req, res) {
@@ -24,25 +25,14 @@ router.get('/', function(req, res) {
           // Redirect to admin page
           res.render('admin/index');
         } else if (req.session.user_type === 'VISITOR') {
-            var propertiesList = [];
             const sql = `SELECT * FROM Property WHERE ApprovedBy IS NOT NULL`;
             db.query(sql, function(err, result) {
-                if (err) {
-                    res.status(500).send({error: err});
-                    return;
-                }
-                for (var i = 0; i < result.length; i++) {
-
-    	  			// Create an object to save current row's data
-    		  		var properties = {
-    		  			'name':rows[i].Name,
-    		  		}
-    		  		// Add object into array
-    		  		propertiesList.push(properties);
-    	  	    }
-                res.render('visit/index', {"propertiesList": propertiesList});
-                console.log(result);
-            });
+              if (err) {
+                res.status(500).send({error: err});
+                return;
+              }
+              res.render('visitor/index', {propertiesList: result});
+          });
         } else if (req.session.user_type === 'OWNER') {
           // Redirect to owner page
           res.render('owner/index');
