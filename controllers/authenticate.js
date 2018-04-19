@@ -42,7 +42,18 @@ router.get('/visitor-register', function(req, res) {
 });
 
 router.post('/visitor-register', function(req, res) {
-  res.render('visitor/register');
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+    const sql = `INSERT INTO User (Username, Email, Password, UserType) VALUES ('${username}', '${email}', MD5('${password}'), "VISITOR")`;
+    db.query(sql, function(err, result) {
+    if (err) {
+        res.status(500).send({error: err});
+        return;
+    }
+    //req.session.user_type = result[0].UserType;
+    res.redirect('/');
+    });
 });
 
 

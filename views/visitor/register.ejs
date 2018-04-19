@@ -29,11 +29,11 @@
         </div>
         <div class="field">
           <label>Password</label>
-          <input type="password" name="password" placeholder="Password" required>
+          <input type="password" name="password" placeholder="Password (8 characters)" pattern=".{8,}" required>
         </div>
         <div class="field">
           <label>Confirm Password</label>
-          <input type="password" name="confirm-password" placeholder="Confirm Password" required>
+          <input type="password" name="confirm-password" placeholder="Confirm Password" pattern=".{8,}" required>
         </div>
         <button class="ui fluid large blue submit button" type="submit">Sign up</button>
 
