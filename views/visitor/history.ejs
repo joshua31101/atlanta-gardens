@@ -11,7 +11,24 @@
         <h1>Visit History</h1>
       </div>
     </h2>
-
+    <table class="ui sortable celled table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Date Logged</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (var i = 0; i < visits.length; i++) { %>
+          <tr>
+            <td ><a href="/properties/<%= visits[i].ID %>"><%= visits[i].Name %></a></td>
+            <td ><%= visits[i].Date %></td>
+            <td ><%= visits[i].Rating %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
   </div>
 
 </body>
