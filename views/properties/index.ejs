@@ -9,6 +9,8 @@
     <h2 class="ui blue header">
       <div class="content">
         <h1>Property Details</h1>
+      </div>
+    </h2>
         <h2>Name: <%= property.Name %></h2>
         <h2>Owner: <%= property.Owner %></h2>
         <h2>Owner Email: <%= email.Email %></h2>
@@ -24,15 +26,11 @@
         <h2>ID: <%= property.ID %></h2>
         <h2>Crops:
             <% for (var i = 0; i < crops.length; i++) { %>
-                <h2><%= crops[i].ItemName %></h2>
+                <li><%= crops[i].ItemName %></li>
             <% } %>
         </h2>
-      </div>
-    </h2>
-
   </div>
-
+  <div class="ui star rating" data-rating="5"></div>
+  <button class="ui button"><a href="/login">Log Visit</a></button>
 </body>
-<div class="ui star rating" data-rating="5"></div>
-<button class="ui button">Log Visit</button>
 </html>

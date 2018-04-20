@@ -19,6 +19,7 @@ router.use('/properties', authorize, require('./properties'));
 
 // Landing page
 router.get('/', function(req, res) {
+    const email = req.body.email;
   // If logged in, then render a page based on user type
     if (req.session.user_type) {
         if (req.session.user_type === 'ADMIN') {
@@ -31,7 +32,7 @@ router.get('/', function(req, res) {
                 res.status(500).send({error: err});
                 return;
               }
-              res.render('visitor/index', {propertiesList: result});
+              res.render('visitor/index', {propertiesList: result, username: req.session.user_name});
           });
         } else if (req.session.user_type === 'OWNER') {
           // Redirect to owner page

@@ -20,6 +20,7 @@ router.post('/login', function(req, res) {
       return;
     }
     req.session.user_type = result[0].UserType;
+    req.session.user_name = result[0].Username;
     res.redirect('/');
   });
 });
@@ -41,6 +42,7 @@ router.get('/visitor-register', function(req, res) {
   res.render('visitor/register');
 });
 
+
 router.post('/visitor-register', function(req, res) {
     const username = req.body.username;
     const email = req.body.email;
@@ -51,7 +53,6 @@ router.post('/visitor-register', function(req, res) {
         res.status(500).send({error: err});
         return;
     }
-    //req.session.user_type = result[0].UserType;
     res.redirect('/');
     });
 });
