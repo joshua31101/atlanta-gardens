@@ -8,23 +8,45 @@
   <div class="ui center aligned grid ui basic segment">
     <h2 class="ui blue header">
       <div class="content">
-        <h1>Welcome</h1>
+        <h1>Welcome Visitor</h1>
+        <h2>All public, confirmed properties</h2>
+    </div>
+  </h2>
         <table class="ui sortable celled table">
           <thead>
             <tr>
               <th>Name</th>
+              <th>Address</th>
+              <th>City</th>
+              <th>Zip</th>
+              <th>Size</th>
+              <th>Type</th>
+              <th>Public</th>
+              <th>Commercial</th>
+              <th>ID</th>
+              <th>Visits</th>
+              <th>Avg Rating</th>
             </tr>
           </thead>
           <tbody>
             <% for (var i = 0; i < propertiesList.length; i++) { %>
               <tr>
-                <th data-link="/properties/<%= propertiesList[i].ID %>"><%= propertiesList[i].Name %></th>
+                <td ><a href="/properties/<%= propertiesList[i].ID %>"><%= propertiesList[i].Name %></a></td>
+                <td ><%= propertiesList[i].Street %></a></td>
+                <td ><%= propertiesList[i].City %></td>
+                <td ><%= propertiesList[i].Zip %></td>
+                <td ><%= propertiesList[i].Size %></td>
+                <td ><%= propertiesList[i].PropertyType %></td>
+                <td ><%= propertiesList[i].IsPublic %></td>
+                <td ><%= propertiesList[i].IsCommercial %></td>
+                <td ><%= propertiesList[i].ID %></td>
+                <td ><%= propertiesList[i].Street %></td>
+                <td ><%= propertiesList[i].Street %></td>
               </tr>
             <% } %>
           </tbody>
         </table>
-      </div>
-    </h2>
+        <button class="ui button">View Visit History</button>
 
   </div>
 
@@ -32,7 +54,7 @@
 
 <script>
   $(document).ready(function() {
-    $('th').click(function(e) {
+    $('td').click(function(e) {
       const propertyURL = e.target.dataset["link"];
       document.location.href = propertyURL;
     });

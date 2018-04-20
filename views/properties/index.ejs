@@ -8,13 +8,31 @@
   <div class="ui center aligned grid ui basic segment">
     <h2 class="ui blue header">
       <div class="content">
-        <h1>Property <%= property.Name %></h1>
-
+        <h1>Property Details</h1>
+        <h2>Name: <%= property.Name %></h2>
+        <h2>Owner: <%= property.Owner %></h2>
+        <h2>Owner Email: <%= email.Email %></h2>
+        <h2>Visits: <%= visits.VisitCount %></h2>
+        <h2>Address: <%= property.Street %></h2>
+        <h2>City: <%= property.City %></h2>
+        <h2>Zip: <%= property.Zip %></h2>
+        <h2>Size (acres): <%= property.Size %></h2>
+        <h2>Avg Rating: <%= visits.AvgRating %></h2>
+        <h2>Type: <%= property.PropertyType %></h2>
+        <h2>Public: <%= property.IsPublic %></h2>
+        <h2>Commercial: <%= property.IsCommercial %></h2>
+        <h2>ID: <%= property.ID %></h2>
+        <h2>Crops:
+            <% for (var i = 0; i < crops.length; i++) { %>
+                <h2><%= crops[i].ItemName %></h2>
+            <% } %>
+        </h2>
       </div>
     </h2>
 
   </div>
 
 </body>
-
+<div class="ui star rating" data-rating="5"></div>
+<button class="ui button">Log Visit</button>
 </html>
