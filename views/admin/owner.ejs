@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/header %>
+<div class="ui center aligned grid ui basic segment">
+    <div>
+        <h2 class="ui blue header">
+            Owner: <%= owner.Username %>
+        </h2>
+
+    </div>
+    <div>
+        <h2 class="ui blue header">
+            Email: <%= owner.Email %>
+        </h2>
+    </div>
+
+    <div>
+        <h2 class="ui blue header">
+            Number of Properties: <%= owner.properties %>
+        </h2>
+    </div>
+
+    <table class="ui sortable celled table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Size</th>
+            <th>IsCommerical</th>
+            <th>IsPublic</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>Zip</th>
+            <th>Property Type</th>
+            <th>Approved By</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (var i = 0; i < properties.length; i++) { %>
+        <tr>
+            <td ><a href="/admin/owner/<%= properties[i].Username %>"><%= properties[i].ID%></a></td>
+            <td ><%= properties[i].Name %></td>
+            <td ><%= properties[i].Size %></td>
+            <td ><%= properties[i].IsCommerical %></td>
+            <td ><%= properties[i].IsPublic %></td>
+            <td ><%= properties[i].Street %></td>
+            <td ><%= properties[i].City %></td>
+            <td ><%= properties[i].Zip %></td>
+            <td ><%= properties[i].PropertyType %></td>
+            <td ><%= properties[i].ApprovedBy %></td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+    <div>
+        <a href="/admin/delete-user/<%= owner.Username%>">
+            <button class="ui negative basic button">
+                Delete Owner Account
+            </button>
+
+        </a>
+    </div>
+</div>
+</body>
+</html>

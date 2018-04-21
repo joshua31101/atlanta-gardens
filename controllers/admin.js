@@ -89,11 +89,11 @@ router.get('/view-owners', function(req, res) {
 router.get('/owner/:owner', function(req, res) {
     const ownerUsername = req.params.owner;
     const sql = `
-        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) as visits 
+        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) as properties 
         FROM User
-        WHERE User.UserType="VISITOR" AND User.Username = '${ownerUsername}'`;
+        WHERE User.Username = '${ownerUsername}'`;
     const sqlProperties = `
-        SELECT ID, Name, Size, IsCommerical, IsPublic, Street, City, Zip, PropertyType, ApprovedBy
+        SELECT ID, Name, Size, IsCommercial, IsPublic, Street, City, Zip, PropertyType, ApprovedBy
         FROM Property
         WHERE Owner='${ownerUsername}'
     `;
@@ -102,7 +102,7 @@ router.get('/owner/:owner', function(req, res) {
             res.status(500).send({error: err});
             return;
         }
-        db.query(sqlVisits, function (err, result) {
+        db.query(sqlProperties, function (err, result) {
             if (err) {
                 res.status(500).send({error: err});
                 return;
