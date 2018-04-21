@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const db = require('./db');
 
+router.post('/:id', function(req, res) {
+
+});
+
 router.get('/:id', function(req, res) {
     const propertyId = req.params.id;
     const sql1 = `SELECT * FROM Property WHERE ID = ${propertyId}`;
