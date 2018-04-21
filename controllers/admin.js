@@ -70,7 +70,6 @@ router.get('/delete-log/:visitor', function(req, res) {
         }
         res.render('admin/index', {user: req.session.name});
     });
-
 });
 
 router.get('/view-owners', function(req, res) {
