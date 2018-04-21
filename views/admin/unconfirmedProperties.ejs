@@ -8,7 +8,7 @@
 <div class="ui center aligned grid ui basic segment">
     <h2 class="ui blue header">
         <div class="content">
-            <h1>Confirmed Properties</h1>
+            <h1>Unconfirmed Properties</h1>
         </div>
     </h2>
     <h1>
@@ -27,8 +27,7 @@
             <th>Public</th>
             <th>Commercial</th>
             <th>ID</th>
-            <th>Verified By</th>
-            <th>Avg Rating</th>
+            <th>Owner</th>
         </tr>
         </thead>
         <tbody>
@@ -43,8 +42,7 @@
             <td ><%= properties[i].IsPublic %></td>
             <td ><%= properties[i].IsCommercial %></td>
             <td ><%= properties[i].ID %></td>
-            <td ><%= properties[i].ApprovedBy %></td>
-            <td ><%= properties[i].avgRating %></td>
+            <td ><%= properties[i].Owner %></td>
         </tr>
         <% } %>
         </tbody>

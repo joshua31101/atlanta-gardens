@@ -11,9 +11,26 @@
                 <h1>All Visitors In System</h1>
             </div>
         </h2>
-        <h1>
-            TODO: SEARCH FUNCTIONALITY
-        </h1>
+
+        <form action="/admin/view-visitors" method="GET" class="ui form">
+            <div class="field">
+                <label>Search</label>
+                <select name="col" class="ui fluid dropdown">
+                    <option value="Username">Username</option>
+                    <option value="Email">Email</option>
+                    <option value="visits">Logged Visits</option>
+                </select>
+            </div>
+            <div class="field">
+                <div class="ui category search">
+                    <div class="ui icon input">
+                        <input name="pattern" class="prompt" type="text" placeholder="Search...">
+                        <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+                </div>
+            </div>
+        </form>
 
         <table class="ui sortable celled table">
             <thead>

@@ -7,16 +7,27 @@ router.get('/', function(req, res) {
 });
 
 router.get('/view-visitors', function(req, res) {
-    const sql = `
+    let c = req.query.col ? req.query.col : 'Username';
+    let m = req.query.pattern ? req.query.pattern : '';
+    let sql = `
         SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits 
         FROM User
-        WHERE UserType="VISITOR"`;
+        WHERE UserType='VISITOR' AND ${c} LIKE '%${m}%'`;
+
+    if (c === 'visits') {
+        sql = `
+            SELECT User_Visit.Username, User_Visit.Email, User_Visit.visits FROM
+            (SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) AS visits
+            FROM User
+            WHERE UserType='VISITOR') AS User_Visit
+            WHERE User_Visit.visits=${m};
+         `
+    }
     db.query(sql, function(err, result) {
       if (err) {
         res.status(500).send({error: err});
         return;
       }
-      console.log(result);
       res.render('admin/visitors', {visitors: result});
     });
 });
@@ -81,7 +92,6 @@ router.get('/view-owners', function(req, res) {
             res.status(500).send({error: err});
             return;
         }
-        console.log(result);
         res.render('admin/owners', {owners: result});
     });
 });
@@ -114,30 +124,32 @@ router.get('/owner/:owner', function(req, res) {
 
 router.get('/confirmed-properties', function (req, res) {
     const sql = `
-        SELECT *
-        FROM Property
-        WHERE ApprovedBy IS NOT NULL`;
+        SELECT p.*, AVG(v.Rating) as avgRating
+        FROM Property AS p
+        LEFT JOIN Visit AS v ON p.ID = v.PropertyID
+        WHERE p.ApprovedBy IS NOT NULL
+        GROUP BY p.ID`;
     db.query(sql, function(err, result) {
         if (err) {
             res.status(500).send({error: err});
             return;
         }
-        console.log(result);
         res.render('admin/confirmedProperties', {properties: result});
     });
 });
 
 router.get('/unconfirmed-properties', function (req, res) {
     const sql = `
-        SELECT *
-        FROM Property
-        WHERE ApprovedBy IS NULL`;
+        SELECT p.*, AVG(v.Rating) as avgRating
+        FROM Property AS p
+        LEFT JOIN Visit AS v ON p.ID = v.PropertyID
+        WHERE p.ApprovedBy IS NULL
+        GROUP BY p.ID`;
     db.query(sql, function(err, result) {
         if (err) {
             res.status(500).send({error: err});
             return;
         }
-        console.log(result);
         res.render('admin/unconfirmedProperties', {properties: result});
     });
 
@@ -154,7 +166,7 @@ router.get('/approved-items', function (req, res) {
             res.status(500).send({error: err});
             return;
         }
-        console.log(result);
+
         res.render('admin/approvedItems', {items: result});
     });
 
@@ -170,7 +182,6 @@ router.get('/pending-items', function (req, res) {
             res.status(500).send({error: err});
             return;
         }
-        console.log(result);
         res.render('admin/pendingItems', {items: result});
     });
 

@@ -25,7 +25,7 @@ router.get('/', function(req, res) {
     if (req.session.user_type) {
         if (req.session.user_type === 'ADMIN') {
           // Redirect to admin page
-          res.render('admin/index', {user: name});
+          res.render('admin/index', {user: username});
         } else if (req.session.user_type === 'VISITOR') {
             const sql = `SELECT * FROM Property WHERE IsPublic IS True AND ApprovedBy IS NOT NULL`;
             db.query(sql, function(err, result) {
