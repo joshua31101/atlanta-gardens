@@ -8,7 +8,10 @@ router.get('/', function(req, res) {
 
 router.get('/view-visitors', function(req, res) {
   // TODO: Need to get number of logged visits instead of password
-    const sql = `SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits FROM User WHERE UserType="VISITOR"`;
+    const sql = `
+        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits 
+        FROM User
+        WHERE UserType="VISITOR"`;
     db.query(sql, function(err, result) {
       if (err) {
         res.status(500).send({error: err});
@@ -21,15 +24,53 @@ router.get('/view-visitors', function(req, res) {
 
 router.get('/visitor/:visitor', function(req, res) {
   const visitorUsername = req.params.visitor;
-  // TODO: Need logged visits
-  const sql = `SELECT Username, Email FROM User WHERE Username=${visitorUsername}`;
+    const sql = `
+        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits 
+        FROM User
+        WHERE User.UserType="VISITOR" AND User.Username = '${visitorUsername}'`;
+    const sqlVisits = `
+        SELECT PropertyID, VisitDate, Rating
+        FROM Visit
+        WHERE Username='${visitorUsername}'
+    `;
+    db.query(sql, function(err, visitor) {
+      if (err) {
+        res.status(500).send({error: err});
+        return;
+      }
+        db.query(sqlVisits, function (err, result) {
+          if (err) {
+            res.status(500).send({error: err});
+            return;
+          }
+            res.render('admin/visitor', {visitor: visitor[0], visits: result});
+        })
+  });
+});
+
+router.get('/delete-user/:visitor', function(req, res) {
+  const visitorUsername = req.params.visitor;
+  const sql = `DELETE FROM User WHERE Username='${visitorUsername}'`;
   db.query(sql, function(err, result) {
     if (err) {
       res.status(500).send({error: err});
       return;
     }
-    res.render('admin/visitor', {visitor: result});
+    res.render('admin/index', {user: req.session.name});
   });
+});
+
+router.get('/delete-log/:visitor', function(req, res) {
+    const visitorUsername = req.params.visitor;
+    const sql = `DELETE FROM Visit WHERE Username='${visitorUsername}'`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        res.render('admin/index', {user: req.session.name});
+    });
+
 });
 
 router.get('/view-owners', function(req, res) {

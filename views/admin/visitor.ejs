@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body>
+    <% include ../partials/header %>
+    <div class="ui center aligned grid ui basic segment">
+        <div>
+            <h2 class="ui blue header">
+                Visitor: <%= visitor.Username %>
+            </h2>
+
+        </div>
+        <div>
+            <h2 class="ui blue header">
+                Email: <%= visitor.Email %>
+            </h2>
+        </div>
+
+        <div>
+            <h2 class="ui blue header">
+                Number of Logged Visits: <%= visitor.visits %>
+            </h2>
+        </div>
+
+        <table class="ui sortable celled table">
+            <thead>
+            <tr>
+                <th>Property ID</th>
+                <th>Visit Date</th>
+                <th>Rating</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for (var i = 0; i < visits.length; i++) { %>
+            <tr>
+                <td ><a href="/admin/visitor/<%= visits[i].Username %>"><%= visits[i].PropertyID%></a></td>
+                <td ><%= visits[i].VisitDate %></td>
+                <td ><%= visits[i].Rating %></td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+        <div>
+            <a href="/admin/delete-user/<%= visitor.Username%>">
+                <button class="ui negative basic button">
+                    Delete Visitor Account
+                </button>
+
+            </a>
+        </div>
+        <div>
+            <a href="/admin/delete-log/<%= visitor.Username%>">
+                <button class="ui negative basic button">
+                    Delete Log History
+                </button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
