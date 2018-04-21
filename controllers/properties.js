@@ -3,7 +3,16 @@ const router = express.Router();
 const db = require('./db');
 
 router.post('/:id', function(req, res) {
-
+    const rating = req.params.rating;
+    const propertyId = req.params.id;
+    const name = req.session.name;
+    const sql = `INSERT INTO Visit (Username, PropertyID, Rating) Values ('name', propertyId, rating) ON DUPLICATE KEY UPDATE Rating= 5`;
+    db.query(sql, function(err, result) {
+      if (err) {
+        res.status(500).send({error: err});
+        return;
+      }
+  });
 });
 
 router.get('/:id', function(req, res) {
@@ -37,6 +46,25 @@ router.get('/:id', function(req, res) {
             });
         });
     });
+});
+
+router.post('/visit-rating', function(req, res) {
+    const { rating, propertyId } = req.body;
+    const username = req.session.name;
+    const dateObj = new Date();
+    const month = dateObj.getUTCMonth() + 1;
+    const day = dateObj.getUTCDate();
+    const year = dateObj.getUTCFullYear();
+    const newdate = year + "-" + month + "-" + day;
+    // validate rating range
+        const sql = `INSERT INTO Visit (Username, PropertyID, VisitDate, Rating) Values ('${username}', '${propertyId}', ${rating}) ON DUPLICATE KEY UPDATE Rating=${rating}`;
+    db.query(sql, function(err, result) {
+      if (err) {
+        res.status(500).send({error: err});
+        return;
+      }
+      res.redirect(`/${propertyId}`);
+  })
 });
 
 module.exports = router;
