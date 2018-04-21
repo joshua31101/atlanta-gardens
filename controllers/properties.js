@@ -2,10 +2,6 @@ const express = require('express');
 const router = express.Router();
 const db = require('./db');
 
-router.post('/view/:id', function(req, res) {
-
-});
-
 router.get('/view/:id', function(req, res) {
     const propertyId = req.params.id;
     const sql1 = `SELECT * FROM Property WHERE ID = ${propertyId}`;
@@ -167,6 +163,25 @@ router.get('/others', function(req, res) {
       properties: result
     });
   });
+});
+
+router.post('/visit-rating', function(req, res) {
+    const { rating, propertyId } = req.body;
+    const username = req.session.name;
+    const dateObj = new Date();
+    const month = dateObj.getUTCMonth() + 1;
+    const day = dateObj.getUTCDate();
+    const year = dateObj.getUTCFullYear();
+    const newdate = year + "-" + month + "-" + day;
+    // validate rating range
+        const sql = `INSERT INTO Visit (Username, PropertyID, VisitDate, Rating) Values ('${username}', '${propertyId}', ${rating}) ON DUPLICATE KEY UPDATE Rating=${rating}`;
+    db.query(sql, function(err, result) {
+      if (err) {
+        res.status(500).send({error: err});
+        return;
+      }
+      res.redirect(`/${propertyId}`);
+  })
 });
 
 module.exports = router;
