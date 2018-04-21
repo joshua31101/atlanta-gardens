@@ -13,8 +13,7 @@
     <div class="column">
       <h2 class="ui blue header">
         <div class="content">
-          <h1>Welcome to Atlanta Gardens, Farms, and Orchards</h1>
-          <h3>New Owner Registration</h3>
+          <h1>Add a property</h1>
         </div>
       </h2>
       <% if (locals.messages.error) { %>
@@ -22,23 +21,7 @@
           <%- locals.messages.error %>
         </div>
       <% } %>
-      <form action="/owner-register" method="post" class="ui form">
-        <div class="field">
-          <label>Email</label>
-          <input type="email" name="email" placeholder="Email" required>
-        </div>
-        <div class="field">
-          <label>Username</label>
-          <input type="text" name="username" placeholder="Username" required>
-        </div>
-        <div class="field">
-          <label>Password</label>
-          <input type="password" name="password" placeholder="Password" pattern=".{8,}" required title="8 characters minimum">
-        </div>
-        <div class="field">
-          <label>Confirm Password</label>
-          <input type="password" name="confirmPassword" placeholder="Confirm Password" pattern=".{8,}" required title="8 characters minimum">
-        </div>
+      <form action="/properties/new" method="post" class="ui form">
         <div class="field">
           <label>Property Name</label>
           <input type="text" name="propertyName" placeholder="Property Name" required>
@@ -105,7 +88,7 @@
             <option value="false">No</option>
           </select>
         </div>
-        <button class="ui fluid large blue submit button" type="submit">Sign up</button>
+        <button class="ui fluid large blue submit button" type="submit">Add property</button>
       </form>
 
       <div class="ui message">

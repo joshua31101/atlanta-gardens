@@ -45,36 +45,45 @@
         <h1>Property Details</h1>
       </div>
     </h2>
-        <h2>Name: <%= property.Name %></h2>
-        <h2>Owner: <%= property.Owner %></h2>
-        <h2>Owner Email: <%= email.Email %></h2>
-        <h2>Visits: <%= visits.VisitCount %></h2>
-        <h2>Address: <%= property.Street %></h2>
-        <h2>City: <%= property.City %></h2>
-        <h2>Zip: <%= property.Zip %></h2>
-        <h2>Size (acres): <%= property.Size %></h2>
-        <h2>Avg Rating: <%= visits.AvgRating %></h2>
-        <h2>Type: <%= property.PropertyType %></h2>
-        <h2>Public: <%= property.IsPublic %></h2>
-        <h2>Commercial: <%= property.IsCommercial %></h2>
-        <h2>ID: <%= property.ID %></h2>
-        <h2>Crops:
+    <div class="ui left floated segment">
+        <h2 align="left">Name: <%= property.Name %></h2>
+        <h2 align="left">Owner: <%= property.Owner %></h2>
+        <h2 align="left">Owner Email: <%= email.Email %></h2>
+        <h2 align="left">Visits: <%= visits.VisitCount %></h2>
+        <h2 align="left">Address: <%= property.Street %></h2>
+        <h2 align="left">City: <%= property.City %></h2>
+        <h2 align="left">Zip: <%= property.Zip %></h2>
+        <h2 align="left">Size (acres): <%= property.Size %></h2>
+        <h2 align="left">Avg Rating: <%= visits.AvgRating %></h2>
+        <h2 align="left">Type: <%= property.PropertyType %></h2>
+        <h2 align="left">Public: <%= property.IsPublic %></h2>
+        <h2 align="left">Commercial: <%= property.IsCommercial %></h2>
+        <h2 align="left">ID: <%= property.ID %></h2>
+        <h2 align="left">Crops:
             <% for (var i = 0; i < crops.length; i++) { %>
                 <li><%= crops[i].ItemName %></li>
             <% } %>
         </h2>
+    </div>
   </div>
-  <!-- <div class="ui star rating" data-rating="5"></div> -->
-  <div class="rating">
-      <span><input type="radio" name="rating" id="str5" value="5"><label for="str5"></label></span>
-      <span><input type="radio" name="rating" id="str4" value="4"><label for="str4"></label></span>
-      <span><input type="radio" name="rating" id="str3" value="3"><label for="str3"></label></span>
-      <span><input type="radio" name="rating" id="str2" value="2"><label for="str2"></label></span>
-      <span><input type="radio" name="rating" id="str1" value="1"><label for="str1"></label></span>
-  </div>
-  <button class="ui button"><a href="/properties/<%= property.ID %>?rating="+userRating>Log Visit</a></button>
+
+  <form action="/properties/visit-rating" method="post">
+      <input type="hidden" name="propertyId" value="<%= property.ID %>">
+      <div class="rating">
+          <span><input type="radio" name="rating" id="str5" value="5"><label for="str5"></label></span>
+          <span><input type="radio" name="rating" id="str4" value="4"><label for="str4"></label></span>
+          <span><input type="radio" name="rating" id="str3" value="3"><label for="str3"></label></span>
+          <span><input type="radio" name="rating" id="str2" value="2"><label for="str2"></label></span>
+          <span><input type="radio" name="rating" id="str1" value="1"><label for="str1"></label></span>
+      </div>
+      <input type="submit" class="ui button" value="Log Visit">
+  </form>
+
 </body>
+
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+
+
 <script type="text/javascript">
 $(document).ready(function(){
     // Check Radio-box
@@ -84,11 +93,13 @@ $(document).ready(function(){
         $(".rating span").removeClass('checked');
         $(this).parent().addClass('checked');
     });
-
-    $('input:radio').change(
-      function(){
-        var userRating = "this.value";
-    });
+    //
+    // $('input:radio').change(
+    //   function(){
+    //     var userRating = this.value;
+    //     // var strLink ="/properties/<%= property.ID %>?rating="+userRating
+    //     // document.getElementById("log").setAttribute("href",strLink);
+    // });
 });
 </script>
 </html>

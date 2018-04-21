@@ -8,8 +8,7 @@
   <div class="ui center">
     <h2 class="ui blue header">
       <div class="content">
-        <h1>Welcome <%- username %></h1>
-        <h2>Your Properties</h2>
+        <h1>Others' Valid Properties</h1>
       </div>
     </h2>
 
@@ -27,7 +26,6 @@
           <th>ID</th>
           <th>Visits</th>
           <th>Avg Rating</th>
-          <th>Edit</th>
         </tr>
       </thead>
       <tbody>
@@ -44,7 +42,6 @@
             <td><%= properties[i].ID %></td>
             <td><%= properties[i].Visit_count %></td>
             <td><%= properties[i].Visit_rating ? properties[i].Visit_rating : 'N/A' %></td>
-            <td><a href="/properties/edit/<%= properties[i].ID %>">Manange property</a></td>
           </tr>
         <% } %>
       </tbody>
@@ -63,9 +60,6 @@
         <i class="search link icon"></i>
       </div>
     </div>
-
-    <button class="ui button"><a href="/properties/new">Add Property</a></button>
-    <button class="ui button"><a href="/properties/others">View other Properties</a></button>
 
   </div>
 

@@ -4,6 +4,8 @@ const express = require("express"),
       app = express(),
       path = require('path');
       session = require('express-session'),
+      cookieParser = require('cookie-parser'),
+      flash = require('express-flash'),
       port = process.env.PORT || 3000;
 
 if (process.env.NODE_ENV !== 'production') {
@@ -22,6 +24,9 @@ app.use(session({
   // Cookie Options
   duration: 24 * 60 * 60 * 1000,// 24 hours
 }));
+
+app.use(cookieParser());
+app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
