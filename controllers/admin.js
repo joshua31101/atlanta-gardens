@@ -7,7 +7,8 @@ router.get('/', function(req, res) {
 });
 
 router.get('/view-visitors', function(req, res) {
-    const sql = `SELECT Username, Email, Password FROM User WHERE UserType="VISITOR"`;
+  // TODO: Need to get number of logged visits instead of password
+    const sql = `SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits FROM User WHERE UserType="VISITOR"`;
     db.query(sql, function(err, result) {
       if (err) {
         res.status(500).send({error: err});
@@ -16,6 +17,19 @@ router.get('/view-visitors', function(req, res) {
       console.log(result);
       res.render('admin/visitors', {visitors: result});
     });
+});
+
+router.get('/visitor/:visitor', function(req, res) {
+  const visitorUsername = req.params.visitor;
+  // TODO: Need logged visits
+  const sql = `SELECT Username, Email FROM User WHERE Username=${visitorUsername}`;
+  db.query(sql, function(err, result) {
+    if (err) {
+      res.status(500).send({error: err});
+      return;
+    }
+    res.render('admin/visitor', {visitor: result});
+  });
 });
 
 router.get('/view-owners', function(req, res) {
