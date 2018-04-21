@@ -2,20 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('./db');
 
-router.post('/:id', function(req, res) {
-    const rating = req.params.rating;
-    const propertyId = req.params.id;
-    const name = req.session.name;
-    const sql = `INSERT INTO Visit (Username, PropertyID, Rating) Values ('name', propertyId, rating) ON DUPLICATE KEY UPDATE Rating= 5`;
-    db.query(sql, function(err, result) {
-      if (err) {
-        res.status(500).send({error: err});
-        return;
-      }
-  });
-});
-
-router.get('/:id', function(req, res) {
+router.get('/view/:id', function(req, res) {
     const propertyId = req.params.id;
     const sql1 = `SELECT * FROM Property WHERE ID = ${propertyId}`;
     const sql2 = `SELECT Email FROM User WHERE Username IN (SELECT Owner FROM Property WHERE ID = ${propertyId})`;
@@ -55,15 +42,17 @@ router.post('/visit-rating', function(req, res) {
     const month = dateObj.getUTCMonth() + 1;
     const day = dateObj.getUTCDate();
     const year = dateObj.getUTCFullYear();
-    const newdate = year + "-" + month + "-" + day;
+    const newdate = year + "/" + month + "/" + day;
+    const newnewdate = new Date(newdate);
     // validate rating range
-        const sql = `INSERT INTO Visit (Username, PropertyID, VisitDate, Rating) Values ('${username}', '${propertyId}', ${rating}) ON DUPLICATE KEY UPDATE Rating=${rating}`;
+
+    const sql = `INSERT INTO Visit (Username, PropertyID, VisitDate, Rating) Values ('${username}', '${propertyId}', NOW(), ${rating}) ON DUPLICATE KEY UPDATE VisitDate= NOW(), Rating=${rating}`;
     db.query(sql, function(err, result) {
       if (err) {
         res.status(500).send({error: err});
         return;
       }
-      res.redirect(`/${propertyId}`);
+      res.redirect(`view/${propertyId}`);
   })
 });
 
