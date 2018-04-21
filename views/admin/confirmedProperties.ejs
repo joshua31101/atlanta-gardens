@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/header %>
+<div class="ui center aligned grid ui basic segment">
+    <h2 class="ui blue header">
+        <div class="content">
+            <h1>Confirmed Properties</h1>
+        </div>
+    </h2>
+    <h1>
+        TODO: SEARCH FUNCTIONALITY
+    </h1>
+
+    <table class="ui compact sortable celled striped table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Zip</th>
+            <th>Size</th>
+            <th>Type</th>
+            <th>Public</th>
+            <th>Commercial</th>
+            <th>ID</th>
+            <th>Verified By</th>
+            <th>Avg Rating</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (var i = 0; i < properties.length; i++) { %>
+        <tr>
+            <td ><%= properties[i].Name %></td>
+            <td ><%= properties[i].Street %></td>
+            <td ><%= properties[i].City %></td>
+            <td ><%= properties[i].Zip %></td>
+            <td ><%= properties[i].Size %></td>
+            <td ><%= properties[i].PropertyType %></td>
+            <td ><%= properties[i].IsPublic %></td>
+            <td ><%= properties[i].IsCommercial %></td>
+            <td ><%= properties[i].ID %></td>
+            <td ><%= properties[i].ApprovedBy %></td>
+            <td ><%= properties[i].Name %></td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>

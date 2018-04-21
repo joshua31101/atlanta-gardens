@@ -19,9 +19,10 @@
         TODO: ADD TO APPROVED LIST
     </div>
 
-    <table class="ui sortable celled striped table">
+    <table class="ui compact sortable celled striped table">
         <thead>
         <tr>
+            <th></th>
             <th>Name</th>
             <th>Type</th>
         </tr>
@@ -29,11 +30,27 @@
         <tbody>
         <% for (var i = 0; i < items.length; i++) { %>
         <tr>
+            <td class="collapsing">
+                <div class="ui fitted slider checkbox">
+                    <input type="checkbox"><label></label>
+                </div>
+            </td>
             <td ><%= items[i].Name %></a></td>
             <td ><%= items[i].Type %></td>
         </tr>
         <% } %>
         </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th>
+                    <div class="ui right floated small primary labeled icon button">
+                        Delete Selection
+                    </div>
+                </th>
+            </tr>
+        </tfoot>
+
     </table>
 
 </div>

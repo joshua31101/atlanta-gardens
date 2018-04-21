@@ -112,21 +112,37 @@ router.get('/owner/:owner', function(req, res) {
     });
 });
 
-// router.get('/owner/confirmed-properties', function (req, res) {
-//     const sql = `
-//         SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits
-//         FROM User
-//         WHERE UserType="VISITOR"`;
-//     db.query(sql, function(err, result) {
-//         if (err) {
-//             res.status(500).send({error: err});
-//             return;
-//         }
-//         console.log(result);
-//         res.render('admin/confirmedProperties', {properties: result});
-//     });
-//
-// });
+router.get('/confirmed-properties', function (req, res) {
+    const sql = `
+        SELECT *
+        FROM Property
+        WHERE ApprovedBy IS NOT NULL`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        console.log(result);
+        res.render('admin/confirmedProperties', {properties: result});
+    });
+});
+
+router.get('/unconfirmed-properties', function (req, res) {
+    const sql = `
+        SELECT *
+        FROM Property
+        WHERE ApprovedBy IS NULL`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        console.log(result);
+        res.render('admin/unconfirmedProperties', {properties: result});
+    });
+
+});
+
 
 router.get('/approved-items', function (req, res) {
     const sql = `
