@@ -68,6 +68,11 @@
   </div>
 
   <% if (hasLogged) { %>
+      <form action="/properties/visit-unlog" method="post">
+          <input type="hidden" name="propertyId" value="<%= property.ID %>">
+          <input type="submit" class="ui button" value="Un-Log Visit">
+      </form>
+  <% } else { %>
       <form action="/properties/visit-rating" method="post">
           <input type="hidden" name="propertyId" value="<%= property.ID %>">
           <div class="rating">
@@ -79,8 +84,6 @@
           </div>
           <input type="submit" class="ui button" value="Log Visit">
       </form>
-  <% } else { %>
-
   <% } %>
 
 </body>

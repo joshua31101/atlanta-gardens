@@ -4,10 +4,13 @@ const db = require('./db');
 
 router.get('/view/:id', function(req, res) {
     const propertyId = req.params.id;
+    const username = req.session.username;
+    var logged = 0;
     const sql1 = `SELECT * FROM Property WHERE ID = ${propertyId}`;
     const sql2 = `SELECT Email FROM User WHERE Username IN (SELECT Owner FROM Property WHERE ID = ${propertyId})`;
     const sql3 = `SELECT count(PropertyID) AS VisitCount, avg(Rating) AS AvgRating FROM Visit WHERE PropertyID = ${propertyId}`;
     const sql4 = `SELECT ItemName FROM Has WHERE PropertyID = ${propertyId}`;
+    const sql5 = `SELECT count(1) AS num FROM Visit WHERE PropertyID = ${propertyId} AND Username = '${username}'`;
     db.query(sql1, function(err, result1) {
         if (err) {
             res.status(500).send({error: err});
@@ -28,7 +31,14 @@ router.get('/view/:id', function(req, res) {
                         res.status(500).send({error: err});
                         return;
                     }
-                    res.render('properties/index', {property: result1[0], email: result2[0], visits: result3[0], crops: result4});
+                    db.query(sql5, function(err, result5) {
+                        if (err) {
+                            res.status(500).send({error: err});
+                            return;
+                        }
+                        logged = result5[0].num;
+                    res.render('properties/index', {property: result1[0], email: result2[0], visits: result3[0], crops: result4, hasLogged: logged});
+                    });
                 });
             });
         });
@@ -167,13 +177,7 @@ router.get('/others', function(req, res) {
 
 router.post('/visit-rating', function(req, res) {
     const { rating, propertyId } = req.body;
-    const username = req.session.name;
-    const dateObj = new Date();
-    const month = dateObj.getUTCMonth() + 1;
-    const day = dateObj.getUTCDate();
-    const year = dateObj.getUTCFullYear();
-    const newdate = year + "/" + month + "/" + day;
-    const newnewdate = new Date(newdate);
+    const username = req.session.username;
     // validate rating range
 
     const sql = `INSERT INTO Visit (Username, PropertyID, VisitDate, Rating) Values ('${username}', '${propertyId}', NOW(), ${rating}) ON DUPLICATE KEY UPDATE VisitDate= NOW(), Rating=${rating}`;
@@ -186,4 +190,16 @@ router.post('/visit-rating', function(req, res) {
   })
 });
 
+router.post('/visit-unlog', function(req, res) {
+    const { rating, propertyId } = req.body;
+    const username = req.session.username;
+    const sql = `DELETE FROM Visit WHERE Username = '${username}' AND PropertyID = ${propertyId}`;
+    db.query(sql, function(err, result) {
+      if (err) {
+        res.status(500).send({error: err});
+        return;
+      }
+      res.redirect(`view/${propertyId}`);
+  })
+});
 module.exports = router;
