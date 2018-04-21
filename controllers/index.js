@@ -44,7 +44,7 @@ router.get('/', function(req, res) {
             }
             res.render('owner/index', {
               username: username,
-              ownerProperties: result
+              properties: result
             });
           });
         }

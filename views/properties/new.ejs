@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../partials/head %>
+  <style media="screen">
+    form {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="ui center aligned grid ui basic segment">
+    <div class="column">
+      <h2 class="ui blue header">
+        <div class="content">
+          <h1>Add a property</h1>
+        </div>
+      </h2>
+      <% if (locals.messages.error) { %>
+        <div class="ui error message">
+          <%- locals.messages.error %>
+        </div>
+      <% } %>
+      <form action="/properties/new" method="post" class="ui form">
+        <div class="field">
+          <label>Property Name</label>
+          <input type="text" name="propertyName" placeholder="Property Name" required>
+        </div>
+        <div class="field">
+          <label>Street Address</label>
+          <input type="text" name="streetAddress" placeholder="Street Address" required>
+        </div>
+        <div class="field">
+          <label>City</label>
+          <input type="text" name="city" placeholder="City" required>
+        </div>
+        <div class="field">
+          <label>Zip</label>
+          <input type="number" name="zip" placeholder="Zip" required>
+        </div>
+        <div class="field">
+          <label>Acres</label>
+          <input type="number" name="acres" placeholder="Acres" required>
+        </div>
+        <div class="field">
+          <label>Property Type</label>
+          <select name="propertyType" id="propertyType" required>
+            <option value="">Select</option>
+            <option value="Garden">Garden</option>
+            <option value="Farm">Farm</option>
+            <option value="Orchard">Orchard</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Crop</label>
+          <select name="crop" id="crops" required>
+            <option value="">Select crop</option>
+            <% orchardCrops.forEach(function(elem) { %>
+              <option class="<%- elem.Type %>" value="<%- elem.Name %>"><%- elem.Name %></option>
+            <% }); %>
+            <% gardenCrops.forEach(function(elem) { %>
+              <option class="<%- elem.Type %>" value="<%- elem.Name %>"><%- elem.Name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="field" id="animalField">
+          <label>Animal</label>
+          <select name="animal">
+            <option value="">Select animal</option>
+            <% animals.forEach(function(elem) { %>
+              <option value="<%- elem.Name %>"><%- elem.Name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="field">
+          <label>Public</label>
+          <select name="isPublic" required>
+            <option value="">Select</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Commercial</label>
+          <select name="isCommercial" required>
+            <option value="">Select</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+        <button class="ui fluid large blue submit button" type="submit">Add property</button>
+      </form>
+
+      <div class="ui message">
+        <a href="/login">Go Back</a>
+      </div>
+
+    </div>
+  </div>
+
+
+</body>
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    var $gardenCropOptions = $('#crops').find('.FLOWER, .VEGETABLE');
+    var $orchardCropOptions = $('#crops').find('.FRUIT, .NUT');
+    var $animalField = $('#animalField');
+    var $animalOptions = $('#animalField option');
+    $('#propertyType').change(function(e) {
+      var selectedValue = $(this).val();
+      if (selectedValue === 'Garden') {
+        $animalOptions.prop("selected", false);
+        $animalField.hide();
+        $gardenCropOptions.prop("selected", false).hide();
+        $orchardCropOptions.show();
+      } else if (selectedValue === 'Orchard') {
+        $animalOptions.prop("selected", false);
+        $animalField.hide();
+        $gardenCropOptions.show();
+        $orchardCropOptions.prop("selected", false).hide();
+      } else {
+        $animalField.show();
+        $orchardCropOptions.show();
+        $gardenCropOptions.show();
+      }
+    });
+
+  });
+</script>
+</html>
