@@ -7,7 +7,6 @@ router.get('/', function(req, res) {
 });
 
 router.get('/view-visitors', function(req, res) {
-  // TODO: Need to get number of logged visits instead of password
     const sql = `
         SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits 
         FROM User
@@ -73,8 +72,47 @@ router.get('/delete-log/:visitor', function(req, res) {
 });
 
 router.get('/view-owners', function(req, res) {
-
+    const sql = `
+        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) as properties
+        FROM User
+        WHERE UserType="OWNER"`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        console.log(result);
+        res.render('admin/owners', {owners: result});
+    });
 });
+
+router.get('/owner/:owner', function(req, res) {
+    const ownerUsername = req.params.owner;
+    const sql = `
+        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) as visits 
+        FROM User
+        WHERE User.UserType="VISITOR" AND User.Username = '${ownerUsername}'`;
+    const sqlProperties = `
+        SELECT ID, Name, Size, IsCommerical, IsPublic, Street, City, Zip, PropertyType, ApprovedBy
+        FROM Property
+        WHERE Owner='${ownerUsername}'
+    `;
+    db.query(sql, function(err, owners) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        db.query(sqlVisits, function (err, result) {
+            if (err) {
+                res.status(500).send({error: err});
+                return;
+            }
+            res.render('admin/owner', {owner: owners[0], properties: result});
+        })
+    });
+});
+
+
 
 // router.get('/')
 
