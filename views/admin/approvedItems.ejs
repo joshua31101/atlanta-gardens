@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/header %>
+<div class="ui center aligned grid ui basic segment">
+    <h2 class="ui blue header">
+        <div class="content">
+            <h1>Approved Animals / Crops</h1>
+        </div>
+    </h2>
+    <h1>
+        TODO: SEARCH FUNCTIONALITY
+    </h1>
+
+    <div>
+        TODO: ADD TO APPROVED LIST
+    </div>
+
+    <table class="ui sortable celled striped table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (var i = 0; i < items.length; i++) { %>
+        <tr>
+            <td ><%= items[i].Name %></a></td>
+            <td ><%= items[i].Type %></td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>

@@ -26,7 +26,7 @@ router.get('/visitor/:visitor', function(req, res) {
     const sql = `
         SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits 
         FROM User
-        WHERE User.UserType="VISITOR" AND User.Username = '${visitorUsername}'`;
+        WHERE User.UserType="VISITOR" AND User.Username = '${visitorUsername}' `;
     const sqlVisits = `
         SELECT PropertyID, VisitDate, Rating
         FROM Visit
@@ -111,6 +111,55 @@ router.get('/owner/:owner', function(req, res) {
         })
     });
 });
+
+// router.get('/owner/confirmed-properties', function (req, res) {
+//     const sql = `
+//         SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits
+//         FROM User
+//         WHERE UserType="VISITOR"`;
+//     db.query(sql, function(err, result) {
+//         if (err) {
+//             res.status(500).send({error: err});
+//             return;
+//         }
+//         console.log(result);
+//         res.render('admin/confirmedProperties', {properties: result});
+//     });
+//
+// });
+
+router.get('/approved-items', function (req, res) {
+    const sql = `
+        SELECT Name, Type 
+        FROM FarmItem
+        WHERE IsApproved=TRUE`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        console.log(result);
+        res.render('admin/approvedItems', {items: result});
+    });
+
+});
+
+router.get('/pending-items', function (req, res) {
+    const sql = `
+        SELECT Name, Type 
+        FROM FarmItem
+        WHERE IsApproved=FALSE`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        console.log(result);
+        res.render('admin/pendingItems', {items: result});
+    });
+
+});
+
 
 
 
