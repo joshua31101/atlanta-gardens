@@ -4,7 +4,7 @@ const db = require('./db');
 
 const authorize = function(req, res, next) {
   if (!req.session.user_type) {
-    res.status(403).send('Forbidden access');
+    res.redirect('/login');
   } else {
     next();
   }
