@@ -30,32 +30,5 @@ router.get('/logout', function(req, res) {
   res.redirect('/login');
 });
 
-router.get('/owner-register', function(req, res) {
-  res.render('owner/register');
-});
-
-router.post('/owner-register', function(req, res) {
-  res.render('owner/register');
-});
-
-router.get('/visitor-register', function(req, res) {
-  res.render('visitor/register');
-});
-
-
-router.post('/visitor-register', function(req, res) {
-    const username = req.body.username;
-    const email = req.body.email;
-    const password = req.body.password;
-    const sql = `INSERT INTO User (Username, Email, Password, UserType) VALUES ('${username}', '${email}', MD5('${password}'), "VISITOR")`;
-    db.query(sql, function(err, result) {
-    if (err) {
-        res.status(500).send({error: err});
-        return;
-    }
-    res.redirect('/');
-    });
-});
-
 
 module.exports = router;

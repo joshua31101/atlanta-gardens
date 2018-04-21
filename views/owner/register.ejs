@@ -17,7 +17,11 @@
           <h3>New Owner Registration</h3>
         </div>
       </h2>
-
+      <% if (locals.messages.error) { %>
+        <div class="ui error message">
+          <%- locals.messages.error %>
+        </div>
+      <% } %>
       <form action="/owner-register" method="post" class="ui form">
         <div class="field">
           <label>Email</label>
@@ -29,19 +33,19 @@
         </div>
         <div class="field">
           <label>Password</label>
-          <input type="password" name="password" placeholder="Password" required>
+          <input type="password" name="password" placeholder="Password" pattern=".{8,}" required title="8 characters minimum">
         </div>
         <div class="field">
           <label>Confirm Password</label>
-          <input type="password" name="confirm-password" placeholder="Confirm Password" required>
+          <input type="password" name="confirmPassword" placeholder="Confirm Password" pattern=".{8,}" required title="8 characters minimum">
         </div>
         <div class="field">
           <label>Property Name</label>
-          <input type="text" name="property-name" placeholder="Property Name" required>
+          <input type="text" name="propertyName" placeholder="Property Name" required>
         </div>
         <div class="field">
           <label>Street Address</label>
-          <input type="text" name="street-address" placeholder="Street Address" required>
+          <input type="text" name="streetAddress" placeholder="Street Address" required>
         </div>
         <div class="field">
           <label>City</label>
@@ -57,7 +61,7 @@
         </div>
         <div class="field">
           <label>Property Type</label>
-          <select name="property-type">
+          <select name="propertyType" id="propertyType" required>
             <option value="">Select</option>
             <option value="Garden">Garden</option>
             <option value="Farm">Farm</option>
@@ -66,17 +70,28 @@
         </div>
         <div class="field">
           <label>Crop</label>
-          <select name="crop">
-            <option value="">Select</option>
-            <option value="fruit">fruit</option>
-            <option value="vegetable">vegetable</option>
-            <option value="nut">nut</option>
-            <option value="flower">flower</option>
+          <select name="crop" id="crops" required>
+            <option value="">Select crop</option>
+            <% orchardCrops.forEach(function(elem) { %>
+              <option class="<%- elem.Type %>" value="<%- elem.Name %>"><%- elem.Name %></option>
+            <% }); %>
+            <% gardenCrops.forEach(function(elem) { %>
+              <option class="<%- elem.Type %>" value="<%- elem.Name %>"><%- elem.Name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="field" id="animalField">
+          <label>Animal</label>
+          <select name="animal">
+            <option value="">Select animal</option>
+            <% animals.forEach(function(elem) { %>
+              <option value="<%- elem.Name %>"><%- elem.Name %></option>
+            <% }); %>
           </select>
         </div>
         <div class="field">
           <label>Public</label>
-          <select name="public">
+          <select name="isPublic" required>
             <option value="">Select</option>
             <option value="true">Yes</option>
             <option value="false">No</option>
@@ -84,16 +99,13 @@
         </div>
         <div class="field">
           <label>Commercial</label>
-          <select name="commercial">
+          <select name="isCommercial" required>
             <option value="">Select</option>
             <option value="true">Yes</option>
             <option value="false">No</option>
           </select>
         </div>
         <button class="ui fluid large blue submit button" type="submit">Sign up</button>
-
-        <div class="ui error message"></div>
-
       </form>
 
       <div class="ui message">
@@ -107,6 +119,29 @@
 </body>
 <script type="text/javascript">
   $(document).ready(function() {
+
+    var $gardenCropOptions = $('#crops').find('.FLOWER, .VEGETABLE');
+    var $orchardCropOptions = $('#crops').find('.FRUIT, .NUT');
+    var $animalField = $('#animalField');
+    var $animalOptions = $('#animalField option');
+    $('#propertyType').change(function(e) {
+      var selectedValue = $(this).val();
+      if (selectedValue === 'Garden') {
+        $animalOptions.prop("selected", false);
+        $animalField.hide();
+        $gardenCropOptions.prop("selected", false).hide();
+        $orchardCropOptions.show();
+      } else if (selectedValue === 'Orchard') {
+        $animalOptions.prop("selected", false);
+        $animalField.hide();
+        $gardenCropOptions.show();
+        $orchardCropOptions.prop("selected", false).hide();
+      } else {
+        $animalField.show();
+        $orchardCropOptions.show();
+        $gardenCropOptions.show();
+      }
+    });
 
   });
 </script>

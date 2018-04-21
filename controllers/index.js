@@ -12,6 +12,7 @@ const authorize = function(req, res, next) {
 
 // Contains login/logout, and visitor/owner registrations
 router.use(require('./authenticate'));
+router.use(require('./register'));
 router.use('/visitor', authorize, require('./visitor'));
 router.use('/owner', authorize, require('./owner'));
 router.use('/admin', authorize, require('./admin'));
