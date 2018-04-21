@@ -25,7 +25,7 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.set('views', __dirname + '/views');
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use('/', require('./controllers/index'));
