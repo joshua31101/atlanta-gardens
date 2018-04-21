@@ -16,11 +16,17 @@ router.post('/login', function(req, res) {
   const sql = `SELECT UserType, Username FROM User WHERE email='${email}' AND Password=MD5('${password}')`;
   db.query(sql, function(err, result) {
     if (err) {
-      res.status(500).send({error: err});
-      return;
+      req.flash('error', err.message);
+      return res.redirect('/login');
     }
+
+    if (!result.length) {
+      req.flash('error', 'Email or password is invalid.');
+      return res.redirect('/login');
+    }
+
     req.session.user_type = result[0].UserType;
-    req.session.name = result[0].Username;
+    req.session.username = result[0].Username;
     res.redirect('/');
   });
 });

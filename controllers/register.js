@@ -141,8 +141,6 @@ router.post('/owner-register', function(req, res) {
             req.flash('error', er);
             return res.redirect('/owner-register');
           }
-          req.session.user_type = 'OWNER';
-          return res.redirect('/');
         });
       } else {
         sql = `INSERT INTO Has VALUES(${newPropertyId},	'${crop}');`
@@ -151,10 +149,11 @@ router.post('/owner-register', function(req, res) {
             req.flash('error', err);
             return res.redirect('/owner-register');
           }
-          req.session.user_type = 'OWNER';
-          return res.redirect('/');
         });
       }
+      req.session.user_type = 'OWNER';
+      req.session.username = username;
+      return res.redirect('/');
     });
   });
 });

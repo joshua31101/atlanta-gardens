@@ -12,6 +12,13 @@
           <h3>Log-in to your account</h3>
         </div>
       </h2>
+
+      <% if (locals.messages.error) { %>
+        <div class="ui error message">
+          <%- locals.messages.error %>
+        </div>
+      <% } %>
+
       <form action="/login" method="post" class="ui large form">
         <div class="ui stacked segment">
           <div class="field">

@@ -20,7 +20,7 @@ router.use('/properties', authorize, require('./properties'));
 
 // Landing page
 router.get('/', function(req, res) {
-    const name = req.session.name;
+    const username = req.session.username;
   // If logged in, then render a page based on user type
     if (req.session.user_type) {
         if (req.session.user_type === 'ADMIN') {
@@ -33,11 +33,20 @@ router.get('/', function(req, res) {
                 res.status(500).send({error: err});
                 return;
               }
-              res.render('visitor/index', {propertiesList: result, user: name});
+              res.render('visitor/index', {propertiesList: result, user: username});
           });
         } else if (req.session.user_type === 'OWNER') {
-          // Redirect to owner page
-          res.render('owner/index');
+          const sql = `SELECT * FROM Property WHERE Owner='${username}'`;
+          db.query(sql, function(err, result) {
+            if (err) {
+              req.flash('error', err.message);
+              return res.redirect('/');
+            }
+            res.render('owner/index', {
+              username: username,
+              ownerProperties: result
+            });
+          });
         }
     } else {
     res.redirect('login');
