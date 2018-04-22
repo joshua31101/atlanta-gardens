@@ -9,8 +9,7 @@ router.get('/sort', function(req, res) {
   let sql = `SELECT * FROM Property WHERE Owner='${username}' ORDER BY ${sortByCol} ${sortOrder}`;
   db.query(sql, function(err, result) {
     if (err) {
-      req.flash('error', err.message);
-      return res.redirect('/');
+      return res.status(200).send(err.message);
     }
     res.status(200).send({
       properties: result
