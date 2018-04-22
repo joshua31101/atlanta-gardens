@@ -19,6 +19,28 @@ router.get('/log/:name', function(req, res) {
     });
 });
 
+router.get('/history/sort', function(req, res) {
+    const username = req.session.username;
+    const sortByCol = req.query.sortBy;
+    const sortOrder = req.query.sortOrder;
+    const sql = `
+      SELECT
+        Property.ID AS ID,
+        Property.Name AS Name,
+        Visit.VisitDate AS Date,
+        Visit.Rating AS Rating
+      FROM Property, Visit
+      WHERE Visit.Username = '${username}' AND Visit.PropertyID = Property.ID ORDER BY ${sortByCol} ${sortOrder}`;
+    db.query(sql, function(err, result) {
+      if (err) {
+        return res.status(500).send(err.message);
+      }
+      res.status(200).send({
+        history: result
+      });
+    });
+});
+
 router.get('/sort', function(req, res) {
   const sortByCol = req.query.sortBy;
   const sortOrder = req.query.sortOrder;
@@ -29,7 +51,7 @@ router.get('/sort', function(req, res) {
                       ON q1.ID = q2.PropertyID ORDER BY ${sortByCol} ${sortOrder}`;
   db.query(sql, function(err, result) {
     if (err) {
-      return res.status(200).send(err.message);
+      return res.status(500).send(err.message);
     }
     res.status(200).send({
       properties: result
