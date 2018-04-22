@@ -83,10 +83,22 @@ router.get('/delete-log/:visitor', function(req, res) {
 });
 
 router.get('/view-owners', function(req, res) {
-    const sql = `
-        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) as properties
+    let c = req.query.col ? req.query.col : 'Username';
+    let m = req.query.pattern ? req.query.pattern : '';
+    let sql = `
+        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) AS properties
         FROM User
-        WHERE UserType="OWNER"`;
+        WHERE UserType='OWNER' AND ${c} LIKE '%${m}%'`;
+
+    if (c === 'properties') {
+        sql = `
+            SELECT User_Prop.Username, User_Prop.Email, User_Prop.properties FROM
+            (SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) AS properties
+            FROM User
+            WHERE UserType='OWNER') AS User_Prop
+            WHERE User_Prop.properties=${m};`;
+    }
+
     db.query(sql, function(err, result) {
         if (err) {
             res.status(500).send({error: err});
