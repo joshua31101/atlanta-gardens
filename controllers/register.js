@@ -142,15 +142,15 @@ router.post('/owner-register', function(req, res) {
             return res.redirect('/owner-register');
           }
         });
-      } else {
-        sql = `INSERT INTO Has VALUES(${newPropertyId},	'${crop}');`
-        db.query(sql, function(er, r) {
-          if (err) {
-            req.flash('error', err);
-            return res.redirect('/owner-register');
-          }
-        });
       }
+      sql = `INSERT INTO Has VALUES(${newPropertyId},	'${crop}');`
+      db.query(sql, function(er, r) {
+        if (err) {
+          req.flash('error', err);
+          return res.redirect('/owner-register');
+        }
+      });
+
       req.session.user_type = 'OWNER';
       req.session.username = username;
       return res.redirect('/');
