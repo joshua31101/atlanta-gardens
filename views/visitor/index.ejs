@@ -39,7 +39,7 @@
                 <td ><%= propertiesList[i].PropertyType %></td>
                 <td ><%= propertiesList[i].IsPublic %></td>
                 <td ><%= propertiesList[i].IsCommercial %></td>
-                <td ><%= propertiesList[i].ID %></td>
+                <td ><script>pad(<%= propertiesList[i].ID %>, 5) </script></td>
                 <td ><%= propertiesList[i].VisitCount %></td>
                 <td ><%= propertiesList[i].RatingNum %></td>
               </tr>
@@ -50,11 +50,11 @@
             <div class="field">
                 <label>Search</label>
                 <select name="col" class="ui fluid dropdown">
-                    <option value="name">Name</option>
-                    <option value="city">City</option>
-                    <option value="type">Type</option>
-                    <option value="visits">Visits</option>
-                    <option value="rating">Avg. Rating</option>
+                    <option value="Name">Name</option>
+                    <option value="City">City</option>
+                    <option value="Type">Type</option>
+                    <option value="VisitCount">Visits</option>
+                    <option value="RatingNum">Avg. Rating</option>
                 </select>
             </div>
             <div class="field">
@@ -72,14 +72,11 @@
   </div>
 
 </body>
-
 <script>
-  $(document).ready(function() {
-    $('td').click(function(e) {
-      const propertyURL = e.target.dataset["link"];
-      document.location.href = propertyURL;
-    });
-  });
+    function pad(n, width, z) {
+        z = z || '0';
+        n = n + '';
+        return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+    }
 </script>
-
 </html>

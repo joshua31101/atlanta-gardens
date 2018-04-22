@@ -13,7 +13,8 @@ router.post('/visitor-register', function(req, res) {
     const sql = `INSERT INTO User (Username, Email, Password, UserType) VALUES ('${username}', '${email}', MD5('${password}'), "VISITOR")`;
     db.query(sql, function(err, result) {
     if (err) {
-        res.status(500).send({error: err});
+        req.flash('error', err.message);
+        res.redirect('/visitor-register');
         return;
     }
     res.redirect('/');

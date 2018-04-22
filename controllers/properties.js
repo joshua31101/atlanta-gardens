@@ -46,30 +46,48 @@ router.get('/view/:id', function(req, res) {
 });
 
 router.get('/view', function(req, res) {
+    const username = req.session.username;
     let c = req.query.col ? req.query.col : 'Username';
     let m = req.query.pattern ? req.query.pattern : '';
-    let sql = `
-        SELECT Name, City, PropertyType (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits
-        FROM User
-        WHERE UserType='VISITOR' AND ${c} LIKE '%${m}%'`;
-
-    if (c === 'visits') {
-        sql = `
-            SELECT Property_List.Username, Property_List.Email, Property_List   .visits FROM
-            (SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) AS visits
-            FROM User
-            WHERE UserType='VISITOR') AS User_Visit
-            WHERE User_Visit.visits=${m};`;
+    let sql =  `SELECT * FROM
+                    (SELECT * FROM Property WHERE IsPublic = True AND ApprovedBy IS NOT NULL) q1
+                        LEFT JOIN
+                    (SELECT Visit.PropertyID, count(Visit.PropertyID) AS VisitCount, avg(Visit.Rating) AS RatingNum FROM Visit GROUP BY Visit.PropertyID) q2
+                        ON q1.ID = q2.PropertyID WHERE ${c} LIKE '%${m}%'`;
+    if (c === 'RatingNum') {
+        sql =  `SELECT * FROM
+                        (SELECT * FROM Property WHERE IsPublic = True AND ApprovedBy IS NOT NULL) q1
+                            LEFT JOIN
+                        (SELECT Visit.PropertyID, count(Visit.PropertyID) AS VisitCount, avg(Visit.Rating) AS RatingNum FROM Visit GROUP BY Visit.PropertyID) q2
+                            ON q1.ID = q2.PropertyID WHERE ${c} LIKE '${m}%'`;
     }
+    if (/^\d[0-9]{0,2}-\d[0-9]{0,2}$/.test(m)) {
+        var range = m.split('-');
+        sql = `SELECT * FROM
+                    (SELECT * FROM Property WHERE IsPublic = True AND ApprovedBy IS NOT NULL) q1
+                        LEFT JOIN
+                    (SELECT Visit.PropertyID, count(Visit.PropertyID) AS VisitCount, avg(Visit.Rating) AS RatingNum FROM Visit GROUP BY Visit.PropertyID) q2
+                        ON q1.ID = q2.PropertyID WHERE ${c} BETWEEN ${range[0]} AND ${range[1]}`;
 
+    }
     db.query(sql, function(err, result) {
       if (err) {
         res.status(500).send({error: err});
         return;
       }
-      res.render('visitors/index', {visitors: result});
+      res.render('visitor/index', {propertiesList: result, user: username});
     });
 });
+
+router.get('/sort', function(req, res) {
+    const value = req.query.name;
+    console.log(value);
+    const sql = `SELECT * FROM
+                    (SELECT * FROM Property WHERE IsPublic = True AND ApprovedBy IS NOT NULL) q1
+                        LEFT JOIN
+                    (SELECT Visit.PropertyID, count(Visit.PropertyID) AS VisitCount, avg(Visit.Rating) AS RatingNum FROM Visit GROUP BY Visit.PropertyID) q2
+                        ON q1.ID = q2.PropertyID ORDER BY `;
+})
 
 router.get('/new', function(req, res) {
   const farmItemQuery = `SELECT * FROM FarmItem WHERE IsApproved=1 ORDER BY Type`;
