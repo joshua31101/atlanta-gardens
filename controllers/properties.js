@@ -60,7 +60,7 @@ router.get('/new', function(req, res) {
   db.query(farmItemQuery, function(err, result) {
     if (err) {
       req.flash('error', err.message);
-      return res.redirect('/new');
+      return res.redirect('new');
     }
     let animals = [];
     let orchardCrops = [];
@@ -98,7 +98,7 @@ router.post('/new', function(req, res) {
   } = req.body;
   const username = req.session.username;
 
-  if (propertyType === 'Farm') {
+  if (propertyType === 'FARM') {
     if (!animal || !crop) {
       req.flash('error', 'Farm must have an animal and a crop.');
       return res.redirect('new');
@@ -143,7 +143,7 @@ router.post('/new', function(req, res) {
       return res.redirect('new');
     }
     const newPropertyId = result.insertId;
-    if (propertyType === 'Farm') {
+    if (propertyType === 'FARM') {
       sql = `INSERT INTO Has VALUES(${newPropertyId},	'${animal}');`
       db.query(sql, function(er, r) {
         if (err) {
@@ -156,7 +156,7 @@ router.post('/new', function(req, res) {
       db.query(sql, function(er, r) {
         if (err) {
           req.flash('error', err);
-          return res.redirect('properties/new');
+          return res.redirect('new');
         }
       });
     }
@@ -177,7 +177,7 @@ router.get('/others', function(req, res) {
   db.query(sql, function(err, result) {
     if (err) {
       req.flash('error', err.message);
-      return res.redirect('/');
+      return res.redirect('other');
     }
     res.render('properties/others', {
       properties: result
@@ -211,4 +211,212 @@ router.post('/visit-unlog', function(req, res) {
       res.redirect(`view/${propertyId}`);
   })
 });
+
+router.get('/edit/:id', function(req, res) {
+  const propertyId = req.params.id;
+  let sql = `
+    SELECT
+      ID as PropertyId,
+      p.Name AS PropertyName,
+      Size,
+      IsCommercial,
+      IsPublic,
+      Street,
+      City,
+      Zip,
+      PropertyType,
+      Has_FarmItem.Name AS ItemName,
+      Has_FarmItem.Type AS ItemType
+    FROM Property AS p
+    INNER JOIN (
+    SELECT * FROM FarmItem AS f
+    INNER JOIN Has AS h ON f.Name = h.ItemName
+    WHERE f.IsApproved = 1
+    ) AS Has_FarmItem ON Has_FarmItem.PropertyID = p.ID
+    WHERE p.ID = ${propertyId};
+  `;
+  db.query(sql, function(err, result) {
+    if (err) {
+      req.flash('error', err.message);
+      return res.redirect(`/properties/edit/${propertyId}`);
+    }
+    const propertyType = result[0].PropertyType;
+    let farmItemQuery = `
+      SELECT
+        Name AS ItemName,
+        Type AS ItemType
+      FROM FarmItem WHERE IsApproved=1 `;
+    if (propertyType === 'GARDEN') {
+      farmItemQuery += `AND Type IN ('FLOWER', 'VEGETABLE')`;
+    } else if (propertyType === 'ORCHARD') {
+      farmItemQuery += `AND Type IN ('FRUIT', 'NUT')`;
+    } else {
+      farmItemQuery += `ORDER BY Type`;
+    }
+    db.query(farmItemQuery, function(err, itemResult) {
+      if (err) {
+        req.flash('error', err.message);
+        return res.redirect(`/properties/edit/${propertyId}`);
+      }
+      let animals = {};
+      let crops = {};
+      itemResult.forEach(function(elem) {
+        if (elem.ItemType === 'ANIMAL') {
+          animals[elem.ItemName] = 0;
+        } else {
+          crops[elem.ItemName] = 0;
+        }
+      });
+
+      // Flag 1 for already selected crops
+      result.forEach(function(propertyItem) {
+        if (propertyItem.ItemType === 'ANIMAL') {
+          animals[propertyItem.ItemName] = 1;
+        } else {
+          crops[propertyItem.ItemName] = 1;
+        }
+      });
+
+      res.render('properties/edit', {
+        property: result[0],
+        animals: animals,
+        crops: crops,
+      });
+    });
+  });
+});
+
+router.post('/edit/:id', function(req, res) {
+  let {
+    propertyName,
+    streetAddress,
+    city,
+    zip,
+    acres,
+    propertyType,
+    crops,
+    animals,
+    isPublic,
+    isCommercial,
+  } = req.body;
+  const propertyId = Number(req.params.id);
+  const username = req.session.username;
+
+  if (typeof animals === 'string') {
+    animals = [animals];
+  }
+  if (typeof crops === 'string') {
+    crops = [crops];
+  }
+
+  if (propertyType === 'FARM') {
+    if (!animals || !crops || (animals && !animals.length) || (crops && !crops.length)) {
+      req.flash('error', 'Farm must have both an animal and a crop.');
+      return res.redirect(`/properties/edit/${propertyId}`);
+    }
+  } else {
+    if (!crops || (crops && !crops.length)) {
+      req.flash('error', 'Garden or orchard must have a crop.');
+      return res.redirect(`/properties/edit/${propertyId}`);
+    }
+  }
+
+  let sql = `
+    UPDATE Property
+    SET
+      ID = ${propertyId},
+      Name = '${propertyName}',
+      Size = ${acres},
+      IsCommercial = ${isCommercial},
+      IsPublic = ${isPublic},
+      Street = '${streetAddress}',
+      City = '${city}',
+      Zip = ${zip}
+    WHERE ID = ${propertyId}
+  `;
+  db.query(sql, function(err, result) {
+    if (err) {
+      req.flash('error', err.message);
+      return res.redirect(`/properties/edit/${propertyId}`);
+    }
+
+    let removedItems = [];
+    let newItems = [];
+    let items = {};
+    sql = `SELECT * FROM Has WHERE PropertyID = ${propertyId}`;
+    db.query(sql, function(er, hasResult) {
+      if (er) {
+        req.flash('error', er);
+        return res.redirect(`/properties/edit/${propertyId}`);
+      }
+      hasResult.forEach(function(has) {
+        items[has.ItemName] = 0;
+      });
+
+      crops.concat(animals).forEach(function(newItem) {
+        if (items[newItem] === 0) {
+          delete items[newItem];
+        } else {
+          items[newItem] = 1;
+        }
+      });
+
+      Object.keys(items).forEach(function(item) {
+        if (items[item]) {
+          newItems.push(item);
+        } else {
+          removedItems.push(item);
+        }
+      });
+
+      if (removedItems) {
+        let deletedItems = [];
+        sql = `DELETE FROM Has WHERE (PropertyId, ItemName) IN (?)`;
+        removedItems.forEach(function(item) {
+          deletedItems.push([propertyId, item]);
+        });
+        db.query(sql, [deletedItems], function(er1, deletedResult) {
+          if (err) {
+            req.flash('error', er);
+            return res.redirect(`/properties/edit/${propertyId}`);
+          }
+        });
+      }
+
+      if (newItems) {
+        let addedItems = [];
+        sql = `INSERT INTO Has VALUES ?`;
+        newItems.forEach(function(item) {
+          addedItems.push([propertyId, item]);
+        });
+        db.query(sql, [addedItems], function(er1, addedResult) {
+          if (err) {
+            req.flash('error', er);
+            return res.redirect(`/properties/edit/${propertyId}`);
+          }
+        });
+      }
+      req.flash('success', 'Successfully updated!');
+      return res.redirect(`/properties/edit/${propertyId}`);
+    });
+  });
+});
+
+router.post('/:id/crop/new', function(req, res) {
+  const { cropName, cropType } = req.body;
+  const propertyId = req.params.id;
+  let sql = `INSERT INTO FarmItem VALUES('${cropName}',	FALSE, '${cropType}')`;
+  db.query(sql, function(err, result) {
+    if (err) {
+      req.flash('error', er);
+      return res.redirect(`/properties/edit/${propertyId}`);
+    }
+    req.flash('success', 'Successfully requested a crop ' + cropName);
+    return res.redirect(`/properties/edit/${propertyId}`);
+  });
+});
+
+
+
+
 module.exports = router;

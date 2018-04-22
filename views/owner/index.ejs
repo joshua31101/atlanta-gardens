@@ -42,7 +42,7 @@
             <td><%= properties[i].IsPublic %></td>
             <td><%= properties[i].IsCommercial %></td>
             <td><%= properties[i].ID %></td>
-            <td><%= properties[i].Visit_count %></td>
+            <td><%= properties[i].Visit_count ? properties[i].Visit_count : 0 %></td>
             <td><%= properties[i].Visit_rating ? properties[i].Visit_rating : 'N/A' %></td>
             <td><a href="/properties/edit/<%= properties[i].ID %>">Manage property</a></td>
           </tr>
