@@ -20,9 +20,9 @@ router.get('/view-visitors', function(req, res) {
             (SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) AS visits
             FROM User
             WHERE UserType='VISITOR') AS User_Visit
-            WHERE User_Visit.visits=${m};
-         `
+            WHERE User_Visit.visits=${m};`;
     }
+
     db.query(sql, function(err, result) {
       if (err) {
         res.status(500).send({error: err});
