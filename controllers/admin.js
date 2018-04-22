@@ -216,6 +216,11 @@ router.get('/approved-items', function (req, res) {
     });
 });
 
+router.get('/prop/:name', function(req, res) {
+    const name = req.params.name;
+
+});
+
 router.post('/add-item', function (req, res) {
     // TODO: HANDLE INSERTING DUPLICATE PRIMARY KEYS
     const sql = `
