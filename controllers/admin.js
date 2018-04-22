@@ -415,7 +415,6 @@ router.post('/edit/:id', function(req, res) {
     });
 });
 
-
 router.post('/add-item', function (req, res) {
     // TODO: HANDLE INSERTING DUPLICATE PRIMARY KEYS
     const sql = `
@@ -491,6 +490,20 @@ router.get('/delete-item/:item', function(req, res) {
         res.render('admin/index', {user: req.session.name});
     });
 });
+
+router.get('/delete-property/:id', function(req, res) {
+    const id = req.params.id;
+    const sql = `DELETE FROM Property WHERE ID='${id}'`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        console.log(result);
+        res.render('admin/index', {user: req.session.name});
+    });
+});
+
 
 
 
