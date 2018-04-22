@@ -14,9 +14,9 @@
     <table class="ui sortable celled table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Date Logged</th>
-          <th>Rating</th>
+          <th data-sort-column="Name" data-sort-asc="true">Name</th>
+          <th data-sort-column="Date" data-sort-asc="true">Date Logged</th>
+          <th data-sort-column="Rating" data-sort-asc="true">Rating</th>
         </tr>
       </thead>
       <tbody>
@@ -32,5 +32,39 @@
   </div>
 
 </body>
+
+<script>
+  $(document).ready(function() {
+    $('tr th').click(function(e) {
+      var $this = $(this);
+      const sortCol = $this.data('sortColumn');
+      const isAsc = $this.data('sortAsc');
+      const sortOrder = isAsc ? 'asc' : 'desc';
+      $this.data('sortAsc', !isAsc);
+      $.ajax({
+        url: `/visitor/history/sort?sortBy=${sortCol}&sortOrder=${sortOrder}`,
+        method: 'GET',
+        success: function(data) {
+          let history = data.history;
+          let tableDOM = `<tbody>`;
+          for (var i = 0; i < history.length; i++) {
+            tableDOM += `
+                <tr>
+                  <td><a href="/properties/${history[i].ID}">${history[i].Name}</a></td>
+                  <td>${history[i].Date}</td>
+                  <td>${history[i].Rating}</td>
+                </tr>
+            `;
+          }
+          $('tbody').replaceWith(tableDOM + '</tbody>');
+        },
+        error: function(xhr) {
+
+        }
+      });
+    });
+
+  });
+</script>
 
 </html>
