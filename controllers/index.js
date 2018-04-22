@@ -27,7 +27,11 @@ router.get('/', function(req, res) {
           // Redirect to admin page
           res.render('admin/index', {user: username});
         } else if (req.session.user_type === 'VISITOR') {
-            const sql = `SELECT * FROM Property WHERE IsPublic IS True AND ApprovedBy IS NOT NULL`;
+            const sql = `SELECT * FROM
+                            (SELECT * FROM Property WHERE IsPublic = True AND ApprovedBy IS NOT NULL) q1
+                                LEFT JOIN
+                            (SELECT Visit.PropertyID, count(Visit.PropertyID) AS VisitCount, avg(Visit.Rating) AS RatingNum FROM Visit GROUP BY Visit.PropertyID) q2
+                                ON q1.ID = q2.PropertyID`;
             db.query(sql, function(err, result) {
               if (err) {
                 res.status(500).send({error: err});

@@ -40,12 +40,33 @@
                 <td ><%= propertiesList[i].IsPublic %></td>
                 <td ><%= propertiesList[i].IsCommercial %></td>
                 <td ><%= propertiesList[i].ID %></td>
-                <td ><%= propertiesList[i].Street %></td>
-                <td ><%= propertiesList[i].Street %></td>
+                <td ><%= propertiesList[i].VisitCount %></td>
+                <td ><%= propertiesList[i].RatingNum %></td>
               </tr>
             <% } %>
           </tbody>
         </table>
+        <form action="/properties/view" method="GET" class="ui form">
+            <div class="field">
+                <label>Search</label>
+                <select name="col" class="ui fluid dropdown">
+                    <option value="name">Name</option>
+                    <option value="city">City</option>
+                    <option value="type">Type</option>
+                    <option value="visits">Visits</option>
+                    <option value="rating">Avg. Rating</option>
+                </select>
+            </div>
+            <div class="field">
+                <div class="ui category search">
+                    <div class="ui icon input">
+                        <input name="pattern" class="prompt" type="text" placeholder="Search...">
+                        <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+                </div>
+            </div>
+        </form>
         <button class="ui button"><a href="/visitor/<%= user %>">Visit History</a></button>
 
   </div>

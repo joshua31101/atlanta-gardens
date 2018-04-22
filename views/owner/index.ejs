@@ -44,7 +44,7 @@
             <td><%= properties[i].ID %></td>
             <td><%= properties[i].Visit_count %></td>
             <td><%= properties[i].Visit_rating ? properties[i].Visit_rating : 'N/A' %></td>
-            <td><a href="/properties/edit/<%= properties[i].ID %>">Manange property</a></td>
+            <td><a href="/properties/edit/<%= properties[i].ID %>">Manage property</a></td>
           </tr>
         <% } %>
       </tbody>
@@ -55,6 +55,8 @@
       <select id="searchBy" name="searchBy">
         <option value="">Select here</option>
         <option value="name">Name</option>
+        <option value="city">City</option>
+        <option value="type">Type</option>
         <option value="visit">Visit</option>
         <option value="rating">Rating</option>
       </select>

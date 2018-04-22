@@ -5,12 +5,14 @@ const db = require('./db');
 router.get('/view/:id', function(req, res) {
     const propertyId = req.params.id;
     const username = req.session.username;
+    const usertype = req.session.user_type;
     var logged = 0;
-    const sql1 = `SELECT * FROM Property WHERE ID = ${propertyId}`;
-    const sql2 = `SELECT Email FROM User WHERE Username IN (SELECT Owner FROM Property WHERE ID = ${propertyId})`;
-    const sql3 = `SELECT count(PropertyID) AS VisitCount, avg(Rating) AS AvgRating FROM Visit WHERE PropertyID = ${propertyId}`;
-    const sql4 = `SELECT ItemName FROM Has WHERE PropertyID = ${propertyId}`;
-    const sql5 = `SELECT count(1) AS num FROM Visit WHERE PropertyID = ${propertyId} AND Username = '${username}'`;
+    const sql1 = `SELECT * FROM
+                    (SELECT * FROM AllEmails, AllProperties WHERE AllEmails.Username = AllProperties.Owner) q1
+                        LEFT JOIN
+                    (SELECT AnimalCrops.*, VisitNum, AvgRating FROM AnimalCrops, VisitRating WHERE AnimalCrops.PropertyID = VisitRating.PropertyID) q2
+                        ON q1.ID = q2.PropertyID WHERE q1.ID = ${propertyId} AND q2.PropertyID = ${propertyId}`;
+    const sql2 = `SELECT count(1) AS num FROM Visit WHERE PropertyID = ${propertyId} AND Username = '${username}'`;
     db.query(sql1, function(err, result1) {
         if (err) {
             res.status(500).send({error: err});
@@ -21,27 +23,35 @@ router.get('/view/:id', function(req, res) {
                 res.status(500).send({error: err});
                 return;
             }
-            db.query(sql3, function(err, result3) {
-                if (err) {
-                    res.status(500).send({error: err});
-                    return;
-                }
-                db.query(sql4, function(err, result4) {
-                    if (err) {
-                        res.status(500).send({error: err});
-                        return;
-                    }
-                    db.query(sql5, function(err, result5) {
-                        if (err) {
-                            res.status(500).send({error: err});
-                            return;
-                        }
-                        logged = result5[0].num;
-                    res.render('properties/index', {property: result1[0], email: result2[0], visits: result3[0], crops: result4, hasLogged: logged});
-                    });
-                });
-            });
+            logged = result2[0].num;
+        res.render('properties/index', {property: result1, hasLogged: logged, type: usertype});
         });
+    });
+});
+
+router.get('/view', function(req, res) {
+    let c = req.query.col ? req.query.col : 'Username';
+    let m = req.query.pattern ? req.query.pattern : '';
+    let sql = `
+        SELECT Name, City, PropertyType (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits
+        FROM User
+        WHERE UserType='VISITOR' AND ${c} LIKE '%${m}%'`;
+
+    if (c === 'visits') {
+        sql = `
+            SELECT Property_List.Username, Property_List.Email, Property_List   .visits FROM
+            (SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) AS visits
+            FROM User
+            WHERE UserType='VISITOR') AS User_Visit
+            WHERE User_Visit.visits=${m};`;
+    }
+
+    db.query(sql, function(err, result) {
+      if (err) {
+        res.status(500).send({error: err});
+        return;
+      }
+      res.render('visitors/index', {visitors: result});
     });
 });
 
@@ -161,7 +171,7 @@ router.get('/others', function(req, res) {
     SELECT p.*, COUNT(v.PropertyID) AS Visit_count, AVG(v.Rating) AS Visit_rating
     FROM Property AS p
     LEFT JOIN Visit AS v ON p.ID = v.PropertyID
-    WHERE Owner <> '${username}' AND p.ApprovedBy IS NULL
+    WHERE Owner <> '${username}' AND p.ApprovedBy IS NOT NULL
     GROUP BY p.ID;
   `;
   db.query(sql, function(err, result) {
@@ -179,7 +189,6 @@ router.post('/visit-rating', function(req, res) {
     const { rating, propertyId } = req.body;
     const username = req.session.username;
     // validate rating range
-
     const sql = `INSERT INTO Visit (Username, PropertyID, VisitDate, Rating) Values ('${username}', '${propertyId}', NOW(), ${rating}) ON DUPLICATE KEY UPDATE VisitDate= NOW(), Rating=${rating}`;
     db.query(sql, function(err, result) {
       if (err) {

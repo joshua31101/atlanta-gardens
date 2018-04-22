@@ -46,35 +46,44 @@
       </div>
     </h2>
     <div class="ui left floated segment">
-        <h2 align="left">Name: <%= property.Name %></h2>
-        <h2 align="left">Owner: <%= property.Owner %></h2>
-        <h2 align="left">Owner Email: <%= email.Email %></h2>
-        <h2 align="left">Visits: <%= visits.VisitCount %></h2>
-        <h2 align="left">Address: <%= property.Street %></h2>
-        <h2 align="left">City: <%= property.City %></h2>
-        <h2 align="left">Zip: <%= property.Zip %></h2>
-        <h2 align="left">Size (acres): <%= property.Size %></h2>
-        <h2 align="left">Avg Rating: <%= visits.AvgRating %></h2>
-        <h2 align="left">Type: <%= property.PropertyType %></h2>
-        <h2 align="left">Public: <%= property.IsPublic %></h2>
-        <h2 align="left">Commercial: <%= property.IsCommercial %></h2>
-        <h2 align="left">ID: <%= property.ID %></h2>
+        <h2 align="left">Name: <%= property[0].Name %></h2>
+        <h2 align="left">Owner: <%= property[0].Owner %></h2>
+        <h2 align="left">Owner Email: <%= property[0].Email %></h2>
+        <h2 align="left">Visits: <%= property[0].VisitNum %></h2>
+        <h2 align="left">Address: <%= property[0].Street %></h2>
+        <h2 align="left">City: <%= property[0].City %></h2>
+        <h2 align="left">Zip: <%= property[0].Zip %></h2>
+        <h2 align="left">Size (acres): <%= property[0].Size %></h2>
+        <h2 align="left">Avg Rating: <%= property[0].AvgRating %></h2>
+        <h2 align="left">Type: <%= property[0].PropertyType %></h2>
+        <h2 align="left">Public: <%= property[0].IsPublic %></h2>
+        <h2 align="left">Commercial: <%= property[0].IsCommercial %></h2>
+        <h2 align="left">ID: <%= property[0].ID %></h2>
+        <h2 align="left">Animals:
+            <% for (var i = 0; i < property.length; i++) { %>
+                <% if (property[i].Type === 'ANIMAL') { %>
+                    <li><%= property[i].ItemName %></li>
+                <% } %>
+            <% } %>
+        </h2>
         <h2 align="left">Crops:
-            <% for (var i = 0; i < crops.length; i++) { %>
-                <li><%= crops[i].ItemName %></li>
+            <% for (var i = 0; i < property.length; i++) { %>
+                <% if (property[i].Type !== 'ANIMAL') { %>
+                    <li><%= property[i].ItemName %></li>
+                <% } %>
             <% } %>
         </h2>
     </div>
   </div>
-
+<% if (type === 'VISITOR') { %>
   <% if (hasLogged) { %>
       <form action="/properties/visit-unlog" method="post">
-          <input type="hidden" name="propertyId" value="<%= property.ID %>">
+          <input type="hidden" name="propertyId" value="<%= property[0].ID %>">
           <input type="submit" class="ui button" value="Un-Log Visit">
       </form>
   <% } else { %>
       <form action="/properties/visit-rating" method="post">
-          <input type="hidden" name="propertyId" value="<%= property.ID %>">
+          <input type="hidden" name="propertyId" value="<%= property[0].ID %>">
           <div class="rating">
               <span><input type="radio" name="rating" id="str5" value="5"><label for="str5"></label></span>
               <span><input type="radio" name="rating" id="str4" value="4"><label for="str4"></label></span>
@@ -85,7 +94,7 @@
           <input type="submit" class="ui button" value="Log Visit">
       </form>
   <% } %>
-
+<% } %>
 </body>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
