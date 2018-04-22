@@ -2,6 +2,22 @@ const express = require('express');
 const router = express.Router();
 const db = require('./db');
 
+router.get('/sort', function(req, res) {
+  const sortByCol = req.query.sortBy;
+  const sortOrder = req.query.sortOrder;
+  const username = req.session.username;
+  let sql = `SELECT * FROM Property WHERE Owner='${username}' ORDER BY ${sortByCol} ${sortOrder}`;
+  db.query(sql, function(err, result) {
+    if (err) {
+      req.flash('error', err.message);
+      return res.redirect('/');
+    }
+    res.status(200).send({
+      properties: result
+    });
+  });
+});
+
 router.get('/view/:id', function(req, res) {
     const propertyId = req.params.id;
     const username = req.session.username;
