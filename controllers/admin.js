@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('./db');
 
-router.get('/', function(req, res) {
-  res.render('visitor/index');
-});
+// router.get('/', function(req, res) {
+//   res.render('visitor/index');
+// });
 
 router.get('/view-visitors', function(req, res) {
     let c = req.query.col ? req.query.col : 'Username';
