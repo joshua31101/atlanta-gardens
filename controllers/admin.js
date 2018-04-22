@@ -135,12 +135,26 @@ router.get('/owner/:owner', function(req, res) {
 });
 
 router.get('/confirmed-properties', function (req, res) {
-    const sql = `
+    let c = req.query.col ? req.query.col : 'Name';
+    let m = req.query.pattern ? req.query.pattern : '';
+
+    let sql = `
         SELECT p.*, AVG(v.Rating) as avgRating
         FROM Property AS p
         LEFT JOIN Visit AS v ON p.ID = v.PropertyID
-        WHERE p.ApprovedBy IS NOT NULL
+        WHERE p.ApprovedBy IS NOT NULL AND p.${c} LIKE '%${m}%'
         GROUP BY p.ID`;
+    if (c === 'Zip' || c === 'Size' || c === 'ID' || c === 'avgRating') {
+        sql = `
+        SELECT * FROM
+        (SELECT p.*, AVG(v.Rating) as avgRating
+        FROM Property AS p
+        LEFT JOIN Visit AS v ON p.ID = v.PropertyID
+        WHERE p.ApprovedBy IS NOT NULL
+        GROUP BY p.ID) AS Prop
+        WHERE Prop.${c}=${m}`;
+    }
+
     db.query(sql, function(err, result) {
         if (err) {
             res.status(500).send({error: err});
