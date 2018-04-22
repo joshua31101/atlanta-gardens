@@ -169,10 +169,13 @@ router.get('/unconfirmed-properties', function (req, res) {
 
 
 router.get('/approved-items', function (req, res) {
+    let c = req.query.col ? req.query.col : 'Name';
+    let m = req.query.pattern ? req.query.pattern : '';
+
     const sql = `
         SELECT Name, Type 
         FROM FarmItem
-        WHERE IsApproved=TRUE`;
+        WHERE IsApproved=TRUE AND ${c} LIKE '%${m}%'`;
     db.query(sql, function(err, result) {
         if (err) {
             res.status(500).send({error: err});
@@ -198,11 +201,6 @@ router.get('/pending-items', function (req, res) {
     });
 
 });
-
-
-
-
-// router.get('/')
 
 
 module.exports = router;
