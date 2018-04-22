@@ -17,28 +17,10 @@
 
     <h2 class="ui blue header">
         <div class="content">
-            <h1>Pending Animals / Crops</h1>
+            <h1>Item</h1>
         </div>
     </h2>
 
-    <form action="/admin/pending-items" method="GET" class="ui form">
-        <div class="field">
-            <label>Search</label>
-            <select name="col" class="ui fluid dropdown">
-                <option value="Name">Name</option>
-                <option value="Type">Type</option>
-            </select>
-        </div>
-        <div class="field">
-            <div class="ui category search">
-                <div class="ui icon input">
-                    <input name="pattern" class="prompt" type="text" placeholder="Search...">
-                    <i class="search icon"></i>
-                </div>
-                <div class="results"></div>
-            </div>
-        </div>
-    </form>
     <table class="ui sortable celled striped table">
         <thead>
         <tr>
@@ -49,12 +31,20 @@
         <tbody>
         <% for (var i = 0; i < items.length; i++) { %>
         <tr>
-            <td ><a href="/admin/pending-items/<%= items[i].Name %>"><%= items[i].Name %></a></td>
+            <td ><%= items[i].Name %></td>
             <td ><%= items[i].Type %></td>
         </tr>
         <% } %>
         </tbody>
     </table>
+
+    <div>
+        <a href="/admin/approve-item/<%= items[0].Name%>">
+            <button class="ui positive basic button">
+                Approve Item
+            </button>
+        </a>
+    </div>
 
 </div>
 </body>

@@ -221,5 +221,35 @@ router.get('/pending-items', function (req, res) {
 
 });
 
+router.get('/pending-items/:name', function (req, res) {
+    const sql = `
+        SELECT Name, Type 
+        FROM FarmItem
+        WHERE IsApproved=FALSE AND Name='${req.params.name}'`;
+
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        res.render('admin/item', {items: result});
+    });
+});
+
+router.get('/approve-item/:item', function(req, res) {
+    const item = req.params.item;
+    const sql = `UPDATE FarmItem SET IsApproved=TRUE WHERE Name='${item}'`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        console.log(result);
+        res.render('admin/index', {user: req.session.name});
+    });
+});
+
+
+
 
 module.exports = router;
