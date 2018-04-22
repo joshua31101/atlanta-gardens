@@ -201,7 +201,7 @@ router.post('/new', function(req, res) {
 router.get('/others', function(req, res) {
   const username = req.session.username;
   let sql = `
-    SELECT p.*, COUNT(v.PropertyID) AS Visit_count, AVG(v.Rating) AS Visit_rating
+    SELECT p.*, COUNT(v.PropertyID) AS VisitCount, AVG(v.Rating) AS RatingNum
     FROM Property AS p
     LEFT JOIN Visit AS v ON p.ID = v.PropertyID
     WHERE Owner <> '${username}' AND p.ApprovedBy IS NOT NULL

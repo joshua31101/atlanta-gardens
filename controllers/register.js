@@ -10,6 +10,17 @@ router.post('/visitor-register', function(req, res) {
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+    if (!(/[^\s@]+@[^\s@]+\.[^\s@]+/.test(email))) {
+      req.flash('error', 'Email is not valid.');
+      res.redirect('/visitor-register');
+      return;
+    }
+    if (password !== confirmPassword) {
+      req.flash('error', 'Password and confirm password do not match.');
+      res.redirect('/visitor-register');
+      return;
+    }
     const sql = `INSERT INTO User (Username, Email, Password, UserType) VALUES ('${username}', '${email}', MD5('${password}'), "VISITOR")`;
     db.query(sql, function(err, result) {
     if (err) {

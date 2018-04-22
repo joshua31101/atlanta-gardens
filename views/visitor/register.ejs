@@ -17,7 +17,11 @@
           <h3>New Visitor Registration</h3>
         </div>
       </h2>
-
+      <% if (locals.messages.error) { %>
+        <div class="ui error message">
+          <%- locals.messages.error %>
+        </div>
+      <% } %>   
       <form action="/visitor-register" method="post" class="ui form blue">
         <div class="field">
           <label>Email</label>
@@ -29,11 +33,11 @@
         </div>
         <div class="field">
           <label>Password</label>
-          <input type="password" name="password" placeholder="Password (8 characters)" pattern=".{8,}" required>
+          <input type="password" name="password" placeholder="Password (8 characters)" pattern=".{8,}" required title="8 characters minimum">
         </div>
         <div class="field">
           <label>Confirm Password</label>
-          <input type="password" name="confirm-password" placeholder="Confirm Password" pattern=".{8,}" required>
+          <input type="password" name="confirmPassword" placeholder="Confirm Password" pattern=".{8,}" required title="8 characters minimum">
         </div>
         <button class="ui fluid large blue submit button" type="submit">Sign up</button>
 
