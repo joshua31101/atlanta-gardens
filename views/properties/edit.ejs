@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../partials/head %>
+  <style media="screen">
+    form {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="ui center aligned grid ui basic segment">
+    <div class="column">
+      <h2 class="ui blue header">
+        <div class="content">
+          <h1>Manage Property: <%- property.PropertyName %></h1>
+          <h3>Id: <%- String(property.PropertyId).padStart(5, "0") %></h3>
+          <h3>Property Type: <%- property.PropertyType %></h3>
+        </div>
+      </h2>
+      <% if (locals.messages.error) { %>
+        <div class="ui error message">
+          <%- locals.messages.error %>
+        </div>
+      <% } %>
+      <% if (locals.messages.success) { %>
+        <div class="ui success message">
+          <%- locals.messages.success %>
+        </div>
+      <% } %>
+
+      <form action="/properties/<%- property.PropertyId %>/crop/new" method="post">
+        <div class="field">
+          <label>Request crop approval</label>
+          <input type="text" name="cropName" placeholder="Enter a new crop" required>
+          <select name="cropType" required>
+            <option value="Select one">Select one</option>
+            <option value="Fruit">Fruit</option>
+            <option value="Nut">Nut</option>
+            <option value="Flower">Flower</option>
+            <option value="Vegetable">Vegetable</option>
+          </select>
+        </div>
+        <input type="submit" value="Submit Request">
+      </form>
+
+      <form action="/properties/edit/<%- property.PropertyId %>" method="post" class="ui form">
+        <input type="hidden" name="propertyType" value="<%- property.PropertyType %>">
+        <div class="field">
+          <label>Property Name</label>
+          <input type="text" name="propertyName" placeholder="Property Name" value="<%- property.PropertyName %>" required>
+        </div>
+        <div class="field">
+          <label>Street Address</label>
+          <input type="text" name="streetAddress" placeholder="Street Address" value="<%- property.Street %>" required>
+        </div>
+        <div class="field">
+          <label>City</label>
+          <input type="text" name="city" placeholder="City" value="<%- property.City %>" required>
+        </div>
+        <div class="field">
+          <label>Zip</label>
+          <input type="number" name="zip" placeholder="Zip" value="<%- property.Zip %>" required>
+        </div>
+        <div class="field">
+          <label>Acres</label>
+          <input type="number" name="acres" placeholder="Acres" value="<%- property.Size %>" required>
+        </div>
+        <div class="field">
+          <label>Crop</label>
+          <select name="crops" id="crops" multiple class="ui fluid dropdown">
+            <option value="">Select approved crops</option>
+            <% for (var name in crops) { %>
+              <option value="<%- name %>" <% if (crops[name]) { %>selected<% } %> >
+                <%- name %>
+              </option>
+            <% } %>
+          </select>
+        </div>
+        <% if (Object.keys(animals).length) { %>
+          <div class="field" id="animalField">
+            <label>Animal</label>
+            <select name="animals" id="animals" multiple class="ui fluid dropdown">
+              <option value="">Select animal</option>
+              <% for (var name in animals) { %>
+                <option value="<%- name %>" <% if (animals[name]) { %>selected<% } %> >
+                  <%- name %>
+                </option>
+              <% } %>
+            </select>
+          </div>
+        <% } %>
+        <div class="field">
+          <label>Public</label>
+          <select name="isPublic" required>
+            <option value="">Select</option>
+            <option value="true" <% if (property.IsPublic) { %>selected<% } %> >Yes</option>
+            <option value="false" <% if (!property.IsPublic) { %>selected<% } %> >No</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Commercial</label>
+          <select name="isCommercial" required>
+            <option value="">Select</option>
+            <option value="true" <% if (property.IsCommercial) { %>selected<% } %> >Yes</option>
+            <option value="false" <% if (!property.IsCommercial) { %>selected<% } %> >No</option>
+          </select>
+        </div>
+        <button class="ui fluid large blue submit button" type="submit">Add property</button>
+      </form>
+
+      <div class="ui message">
+        <a href="/">Go Back</a>
+      </div>
+
+    </div>
+  </div>
+
+
+</body>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.ui.dropdown').dropdown();
+  });
+</script>
+</html>
