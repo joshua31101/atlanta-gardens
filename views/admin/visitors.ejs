@@ -45,9 +45,9 @@
         <table class="ui sortable celled table">
             <thead>
             <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Logged Visits</th>
+                <th data-sort-column="Username" data-sort-asc="true">Username</th>
+                <th data-sort-column="Email" data-sort-asc="true">Email</th>
+                <th data-sort-column="Visits" data-sort-asc="true">Logged Visits</th>
             </tr>
             </thead>
             <tbody>
@@ -63,4 +63,38 @@
 
     </div>
 </body>
+
+<script>
+  $(document).ready(function() {
+    $('tr th').click(function(e) {
+      var $this = $(this);
+      const sortCol = $this.data('sortColumn');
+      const isAsc = $this.data('sortAsc');
+      const sortOrder = isAsc ? 'asc' : 'desc';
+      $this.data('sortAsc', !isAsc);
+      $.ajax({
+        url: `/admin/visitors/sort?sortBy=${sortCol}&sortOrder=${sortOrder}`,
+        method: 'GET',
+        success: function(data) {
+          let visitors = data.visitors;
+          let tableDOM = `<tbody>`;
+          for (var i = 0; i < visitors.length; i++) {
+            tableDOM += `
+                <tr>
+                  <td><a href="/admin/visitor/${visitors[i].Username}">${visitors[i].Username}</a></td>
+                  <td>${visitors[i].Email}</td>
+                  <td>${visitors[i].visits}</td>
+                </tr>
+            `;
+          }
+          $('tbody').replaceWith(tableDOM + '</tbody>');
+        },
+        error: function(xhr) {
+
+        }
+      });
+    });
+
+  });
+</script>
 </html>

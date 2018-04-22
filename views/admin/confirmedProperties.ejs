@@ -27,17 +27,16 @@
     <table class="ui compact sortable celled striped table">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>Zip</th>
-            <th>Size</th>
-            <th>Type</th>
-            <th>Public</th>
-            <th>Commercial</th>
-            <th>ID</th>
-            <th>Verified By</th>
-            <th>Avg Rating</th>
+          <th data-sort-column="Name" data-sort-asc="true">Name</th>
+          <th data-sort-column="Street" data-sort-asc="true">Address</th>
+          <th data-sort-column="City" data-sort-asc="true">City</th>
+          <th data-sort-column="Zip" data-sort-asc="true">Zip</th>
+          <th data-sort-column="Size" data-sort-asc="true">Size</th>
+          <th data-sort-column="PropertyType" data-sort-asc="true">Type</th>
+          <th data-sort-column="IsPublic" data-sort-asc="true">Public</th>
+          <th data-sort-column="IsCommercial" data-sort-asc="true">Commercial</th>
+          <th data-sort-column="ApprovedBy" data-sort-asc="true">Verified By</th>
+          <th data-sort-column="AvgRating" data-sort-asc="true">Avg Rating</th>
         </tr>
         </thead>
         <tbody>
@@ -53,7 +52,7 @@
             <td ><%= properties[i].IsCommercial %></td>
             <td ><%= properties[i].ID %></td>
             <td ><%= properties[i].ApprovedBy %></td>
-            <td ><%= properties[i].avgRating %></td>
+            <td ><%= properties[i].AvgRating %></td>
         </tr>
         <% } %>
         </tbody>
@@ -61,4 +60,44 @@
 
 </div>
 </body>
+<script>
+  $(document).ready(function() {
+    $('tr th').click(function(e) {
+      var $this = $(this);
+      const sortCol = $this.data('sortColumn');
+      const isAsc = $this.data('sortAsc');
+      const sortOrder = isAsc ? 'asc' : 'desc';
+      $this.data('sortAsc', !isAsc);
+      $.ajax({
+        url: `/admin/confirmed-properties/sort?sortBy=${sortCol}&sortOrder=${sortOrder}`,
+        method: 'GET',
+        success: function(data) {
+          let properties = data.properties;
+          let tableDOM = `<tbody>`;
+          for (var i = 0; i < properties.length; i++) {
+            tableDOM += `
+              <tr>
+                <td>${properties[i].Name}</td>
+                <td>${properties[i].Street}</td>
+                <td>${properties[i].City}</td>
+                <td>${properties[i].Zip}</td>
+                <td>${properties[i].Size}</td>
+                <td>${properties[i].PropertyType}</td>
+                <td>${properties[i].IsPublic}</td>
+                <td>${properties[i].IsCommercial}</td>
+                <td>${properties[i].ID}</td>
+                <td>${properties[i].Owner}</td>
+              </tr>
+            `;
+          }
+          $('tbody').replaceWith(tableDOM + '</tbody>');
+        },
+        error: function(xhr) {
+
+        }
+      });
+    });
+
+  });
+</script>
 </html>

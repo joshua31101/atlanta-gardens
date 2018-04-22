@@ -47,15 +47,15 @@
     <table class="ui sortable celled striped table">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Type</th>
+            <th data-sort-column="Name" data-sort-asc="true">Name</th>
+            <th data-sort-column="Type" data-sort-asc="true">Type</th>
         </tr>
         </thead>
         <tbody>
         <% for (var i = 0; i < items.length; i++) { %>
         <tr>
-            <td ><%= items[i].Name %></a></td>
-            <td ><%= items[i].Type %></td>
+            <td><%= items[i].Name %></a></td>
+            <td><%= items[i].Type %></td>
         </tr>
         <% } %>
         </tbody>
@@ -63,4 +63,36 @@
 
 </div>
 </body>
+<script>
+  $(document).ready(function() {
+    $('tr th').click(function(e) {
+      var $this = $(this);
+      const sortCol = $this.data('sortColumn');
+      const isAsc = $this.data('sortAsc');
+      const sortOrder = isAsc ? 'asc' : 'desc';
+      $this.data('sortAsc', !isAsc);
+      $.ajax({
+        url: `/admin/pending-items/sort?sortBy=${sortCol}&sortOrder=${sortOrder}`,
+        method: 'GET',
+        success: function(data) {
+          let items = data.items;
+          let tableDOM = `<tbody>`;
+          for (var i = 0; i < items.length; i++) {
+            tableDOM += `
+                <tr>
+                  <td>${items[i].Name}</td>
+                  <td>${items[i].Type}</td>
+                </tr>
+            `;
+          }
+          $('tbody').replaceWith(tableDOM + '</tbody>');
+        },
+        error: function(xhr) {
+          console.log(xhr.responseJSON);
+        }
+      });
+    });
+
+  });
+</script>
 </html>
