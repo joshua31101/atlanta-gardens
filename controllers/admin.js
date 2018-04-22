@@ -10,7 +10,7 @@ router.get('/view-visitors', function(req, res) {
     let c = req.query.col ? req.query.col : 'Username';
     let m = req.query.pattern ? req.query.pattern : '';
     let sql = `
-        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits 
+        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits
         FROM User
         WHERE UserType='VISITOR' AND ${c} LIKE '%${m}%'`;
 
@@ -32,10 +32,34 @@ router.get('/view-visitors', function(req, res) {
     });
 });
 
+router.get('/visitors/sort', function(req, res) {
+  const sortByCol = req.query.sortBy;
+  const sortOrder = req.query.sortOrder;
+  let sql = ``;
+  if (sortByCol === 'Visits') {
+    sql = `
+        SELECT User_Visit.Username, User_Visit.Email, User_Visit.visits FROM
+        (SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) AS visits
+        FROM User
+        WHERE UserType='VISITOR') AS User_Visit ORDER BY ${sortByCol} ${sortOrder}`;
+  } else {
+    sql = `
+      SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits
+      FROM User
+      WHERE UserType='VISITOR' ORDER BY ${sortByCol} ${sortOrder}`;
+  }
+  db.query(sql, function(err, result) {
+    if (err) {
+      return res.status(500).send(err.message);
+    }
+    res.status(200).send({ visitors: result });
+  });
+});
+
 router.get('/visitor/:visitor', function(req, res) {
   const visitorUsername = req.params.visitor;
     const sql = `
-        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits 
+        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits
         FROM User
         WHERE User.UserType="VISITOR" AND User.Username = '${visitorUsername}' `;
     const sqlVisits = `
@@ -108,10 +132,33 @@ router.get('/view-owners', function(req, res) {
     });
 });
 
+router.get('/owners/sort', function(req, res) {
+  const sortByCol = req.query.sortBy;
+  const sortOrder = req.query.sortOrder;
+  let sql = `
+      SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) AS properties
+      FROM User
+      WHERE UserType='OWNER' ORDER BY ${sortByCol} ${sortOrder}`;
+
+  if (sortByCol === 'Properties') {
+    sql = `
+        SELECT User_Prop.Username AS Username, User_Prop.Email AS Email, User_Prop.properties AS properties FROM
+        (SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) AS properties
+        FROM User
+        WHERE UserType='OWNER') AS User_Prop ORDER BY ${sortByCol} ${sortOrder}`;
+  }
+  db.query(sql, function(err, result) {
+    if (err) {
+      return res.status(500).send(err.message);
+    }
+    res.status(200).send({ owners: result });
+  });
+});
+
 router.get('/owner/:owner', function(req, res) {
     const ownerUsername = req.params.owner;
     const sql = `
-        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) as properties 
+        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) as properties
         FROM User
         WHERE User.Username = '${ownerUsername}'`;
     const sqlProperties = `
@@ -136,7 +183,7 @@ router.get('/owner/:owner', function(req, res) {
 
 router.get('/confirmed-properties', function (req, res) {
     const sql = `
-        SELECT p.*, AVG(v.Rating) as avgRating
+        SELECT p.*, AVG(v.Rating) as AvgRating
         FROM Property AS p
         LEFT JOIN Visit AS v ON p.ID = v.PropertyID
         WHERE p.ApprovedBy IS NOT NULL
@@ -150,9 +197,26 @@ router.get('/confirmed-properties', function (req, res) {
     });
 });
 
+router.get('/confirmed-properties/sort', function (req, res) {
+  const sortByCol = req.query.sortBy;
+  const sortOrder = req.query.sortOrder;
+  const sql = `
+    SELECT p.*, AVG(v.Rating) as AvgRating
+    FROM Property AS p
+    LEFT JOIN Visit AS v ON p.ID = v.PropertyID
+    WHERE p.ApprovedBy IS NOT NULL
+    GROUP BY p.ID ORDER BY ${sortByCol} ${sortOrder}`;
+  db.query(sql, function(err, result) {
+    if (err) {
+      return res.status(500).send(err.message);
+    }
+    res.status(200).send({ properties: result });
+  });
+});
+
 router.get('/unconfirmed-properties', function (req, res) {
     const sql = `
-        SELECT p.*, AVG(v.Rating) as avgRating
+        SELECT p.*, AVG(v.Rating) as AvgRating
         FROM Property AS p
         LEFT JOIN Visit AS v ON p.ID = v.PropertyID
         WHERE p.ApprovedBy IS NULL
@@ -168,12 +232,30 @@ router.get('/unconfirmed-properties', function (req, res) {
 });
 
 
+router.get('/unconfirmed-properties/sort', function (req, res) {
+  const sortByCol = req.query.sortBy;
+  const sortOrder = req.query.sortOrder;
+  const sql = `
+      SELECT p.*, AVG(v.Rating) as avgRating
+      FROM Property AS p
+      LEFT JOIN Visit AS v ON p.ID = v.PropertyID
+      WHERE p.ApprovedBy IS NULL
+      GROUP BY p.ID ORDER BY ${sortByCol} ${sortOrder}`;
+  db.query(sql, function(err, result) {
+    if (err) {
+      return res.status(500).send(err.message);
+    }
+    res.status(200).send({ properties: result });
+  });
+});
+
+
 router.get('/approved-items', function (req, res) {
     let c = req.query.col ? req.query.col : 'Name';
     let m = req.query.pattern ? req.query.pattern : '';
 
     const sql = `
-        SELECT Name, Type 
+        SELECT Name, Type
         FROM FarmItem
         WHERE IsApproved=TRUE AND ${c} LIKE '%${m}%'`;
     db.query(sql, function(err, result) {
@@ -184,6 +266,21 @@ router.get('/approved-items', function (req, res) {
 
         res.render('admin/approvedItems', {items: result});
     });
+});
+
+router.get('/approved-items/sort', function (req, res) {
+  const sortByCol = req.query.sortBy;
+  const sortOrder = req.query.sortOrder;
+  const sql = `
+    SELECT Name, Type
+    FROM FarmItem
+    WHERE IsApproved=TRUE ORDER BY ${sortByCol} ${sortOrder}`;
+  db.query(sql, function(err, result) {
+    if (err) {
+      return res.status(500).send(err.message);
+    }
+    res.status(200).send({ items: result });
+  });
 });
 
 router.post('/add-item', function (req, res) {
@@ -207,7 +304,7 @@ router.get('/pending-items', function (req, res) {
     let m = req.query.pattern ? req.query.pattern : '';
 
     const sql = `
-        SELECT Name, Type 
+        SELECT Name, Type
         FROM FarmItem
         WHERE IsApproved=FALSE AND ${c} LIKE '%${m}%'`;
 
@@ -218,7 +315,21 @@ router.get('/pending-items', function (req, res) {
         }
         res.render('admin/pendingItems', {items: result});
     });
+});
 
+router.get('/pending-items/sort', function (req, res) {
+  const sortByCol = req.query.sortBy;
+  const sortOrder = req.query.sortOrder;
+  const sql = `
+    SELECT Name, Type
+    FROM FarmItem
+    WHERE IsApproved=FALSE ORDER BY ${sortByCol} ${sortOrder}`;
+  db.query(sql, function(err, result) {
+    if (err) {
+      return res.status(500).send(err.message);
+    }
+    res.status(200).send({ items: result });
+  });
 });
 
 
