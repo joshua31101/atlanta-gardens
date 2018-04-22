@@ -6,7 +6,7 @@ router.get('/', function(req, res) {
   res.render('visitor/index');
 });
 
-router.get('log/:name', function(req, res) {
+router.get('/log/:name', function(req, res) {
     const name = req.params.name;
     const sql = `SELECT Property.ID AS ID, Property.Name AS Name, Visit.VisitDate AS Date, Visit.Rating AS Rating FROM Property, Visit WHERE Visit.Username = '${name}' AND Visit.PropertyID = Property.ID`;
     db.query(sql, function(err, result) {
