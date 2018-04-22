@@ -40,7 +40,7 @@ router.get('/', function(req, res) {
               res.render('visitor/index', {propertiesList: result, user: username});
           });
         } else if (req.session.user_type === 'OWNER') {
-          const sql = `SELECT * FROM Property WHERE Owner='${username}'`;
+          const sql = `SELECT * FROM Property WHERE Owner='${username}' `;
           db.query(sql, function(err, result) {
             if (err) {
               req.flash('error', err.message);
@@ -48,7 +48,7 @@ router.get('/', function(req, res) {
             }
             res.render('owner/index', {
               username: username,
-              properties: result
+              properties: result,
             });
           });
         }
