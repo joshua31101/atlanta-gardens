@@ -20,9 +20,34 @@
             <h1>Confirmed Properties</h1>
         </div>
     </h2>
-    <h1>
-        TODO: SEARCH FUNCTIONALITY
-    </h1>
+
+    <form action="/admin/confirmed-properties" method="GET" class="ui form">
+        <div class="field">
+            <label>Search</label>
+            <select name="col" class="ui fluid dropdown">
+                <option value="Name">Name</option>
+                <option value="Street">Address</option>
+                <option value="City">City</option>
+                <option value="Zip">Zip</option>
+                <option value="Size">Size</option>
+                <option value="PropertyType">Type</option>
+                <option value="IsPublic">Public</option>
+                <option value="IsCommercial">Commercial</option>
+                <option value="ID">ID</option>
+                <option value="ApprovedBy">Verified By</option>
+                <option value="avgRating">AvgRating</option>
+            </select>
+        </div>
+        <div class="field">
+            <div class="ui category search">
+                <div class="ui icon input">
+                    <input name="pattern" class="prompt" type="text" placeholder="Search...">
+                    <i class="search icon"></i>
+                </div>
+                <div class="results"></div>
+            </div>
+        </div>
+    </form>
 
     <table class="ui compact sortable celled striped table">
         <thead>
@@ -42,7 +67,7 @@
         <tbody>
         <% for (var i = 0; i < properties.length; i++) { %>
         <tr>
-            <td ><%= properties[i].Name %></td>
+            <td ><a href="/admin/prop/<%= properties[i].ID %>"><%= properties[i].Name %></a></td>
             <td ><%= properties[i].Street %></td>
             <td ><%= properties[i].City %></td>
             <td ><%= properties[i].Zip %></td>

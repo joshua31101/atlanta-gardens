@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/header %>
+<div class="ui center aligned grid ui basic segment">
+    <div class="ui">
+        <a href="/">
+            <button class="ui labeled icon button active">
+                <i class="left chevron icon"></i>
+                Back
+            </button>
+        </a>
+    </div>
+
+    <h2 class="ui blue header">
+        <div class="content">
+            <h1>Item</h1>
+        </div>
+    </h2>
+
+    <table class="ui sortable celled striped table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (var i = 0; i < items.length; i++) { %>
+        <tr>
+            <td ><%= items[i].Name %></td>
+            <td ><%= items[i].Type %></td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <div>
+        <a href="/admin/approve-item/<%= items[0].Name%>">
+            <button class="ui positive basic button">
+                Approve Item
+            </button>
+        </a>
+    </div>
+    <div>
+        <a href="/admin/delete-item/<%= items[0].Name%>">
+            <button class="ui negative basic button">
+                Delete Item
+            </button>
+        </a>
+    </div>
+
+
+</div>
+</body>
+</html>

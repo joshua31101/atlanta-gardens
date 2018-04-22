@@ -72,27 +72,11 @@
         <tbody>
         <% for (var i = 0; i < items.length; i++) { %>
         <tr>
-            <td class="collapsing">
-                <div class="ui fitted slider checkbox">
-                    <input type="checkbox"><label></label>
-                </div>
-            </td>
-            <td ><%= items[i].Name %></a></td>
+            <td ><a href="/admin/items/<%= items[i].Name %>"><%= items[i].Name %></a></td>
             <td ><%= items[i].Type %></td>
         </tr>
         <% } %>
         </tbody>
-        <tfoot>
-            <tr>
-                <th></th>
-                <th>
-                    <div class="ui right floated small primary labeled icon button">
-                        Delete Selection
-                    </div>
-                </th>
-            </tr>
-        </tfoot>
-
     </table>
 
 </div>

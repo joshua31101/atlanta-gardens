@@ -39,11 +39,6 @@
             </div>
         </div>
     </form>
-
-    <div>
-        TODO: ADD TO APPROVED LIST
-    </div>
-
     <table class="ui sortable celled striped table">
         <thead>
         <tr>
@@ -54,7 +49,7 @@
         <tbody>
         <% for (var i = 0; i < items.length; i++) { %>
         <tr>
-            <td><%= items[i].Name %></a></td>
+            <td><a href="/admin/items/<%= items[i].Name %>"><%= items[i].Name %></a></td>
             <td><%= items[i].Type %></td>
         </tr>
         <% } %>
