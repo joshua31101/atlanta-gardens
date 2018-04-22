@@ -235,15 +235,15 @@ router.get('/prop/:id', function(req, res) {
     INNER JOIN (
     SELECT * FROM FarmItem AS f
     INNER JOIN Has AS h ON f.Name = h.ItemName
-    WHERE f.IsApproved = 1
     ) AS Has_FarmItem ON Has_FarmItem.PropertyID = p.ID
     WHERE p.ID = ${propertyId};
-  `;
+    `;
     db.query(sql, function(err, result) {
         if (err) {
             req.flash('error', err.message);
             return res.redirect(`admin/index`);
         }
+        console.log(result);
         const propertyType = result[0].PropertyType;
         let farmItemQuery = `
       SELECT
