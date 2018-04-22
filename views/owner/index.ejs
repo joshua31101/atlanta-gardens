@@ -42,29 +42,35 @@
             <td><%= properties[i].IsPublic %></td>
             <td><%= properties[i].IsCommercial %></td>
             <td><%= properties[i].ID %></td>
-            <td><%= properties[i].Visit_count ? properties[i].Visit_count : 0 %></td>
-            <td><%= properties[i].Visit_rating ? properties[i].Visit_rating : 'N/A' %></td>
+            <td><%= properties[i].VisitCount ? properties[i].VisitCount : 0 %></td>
+            <td><%= properties[i].RatingNum ? properties[i].RatingNum : 'N/A' %></td>
             <td><a href="/properties/edit/<%= properties[i].ID %>">Manage property</a></td>
           </tr>
         <% } %>
       </tbody>
     </table>
 
-    <div class="ui container">
-      <label for="searchBy">Search by</label>
-      <select id="searchBy" name="searchBy">
-        <option value="">Select here</option>
-        <option value="name">Name</option>
-        <option value="city">City</option>
-        <option value="type">Type</option>
-        <option value="visit">Visit</option>
-        <option value="rating">Rating</option>
-      </select>
-      <div class="ui icon input">
-        <input type="text" placeholder="Search...">
-        <i class="search link icon"></i>
-      </div>
-    </div>
+    <form action="/owner/view-properties" method="GET" class="ui form">
+        <div class="field">
+            <label>Search</label>
+            <select name="col" class="ui fluid dropdown">
+                <option value="Name">Name</option>
+                <option value="City">City</option>
+                <option value="Type">Type</option>
+                <option value="VisitCount">Visits</option>
+                <option value="RatingNum">Avg. Rating</option>
+            </select>
+        </div>
+        <div class="field">
+            <div class="ui category search">
+                <div class="ui icon input">
+                    <input name="pattern" class="prompt" type="text" placeholder="Search...">
+                    <i class="search icon"></i>
+                </div>
+                <div class="results"></div>
+            </div>
+        </div>
+    </form>
 
     <button class="ui button"><a href="/properties/new">Add Property</a></button>
     <button class="ui button"><a href="/properties/others">View other Properties</a></button>

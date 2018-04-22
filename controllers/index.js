@@ -40,7 +40,11 @@ router.get('/', function(req, res) {
               res.render('visitor/index', {propertiesList: result, user: username});
           });
         } else if (req.session.user_type === 'OWNER') {
-          const sql = `SELECT * FROM Property WHERE Owner='${username}' `;
+          const sql = `SELECT * FROM
+                          (SELECT * FROM Property WHERE Owner = '${username}') q1
+                              LEFT JOIN
+                          (SELECT Visit.PropertyID, count(Visit.PropertyID) AS VisitCount, avg(Visit.Rating) AS RatingNum FROM Visit GROUP BY Visit.PropertyID) q2
+                              ON q1.ID = q2.PropertyID`;
           db.query(sql, function(err, result) {
             if (err) {
               req.flash('error', err.message);
