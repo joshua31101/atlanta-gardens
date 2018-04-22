@@ -184,8 +184,23 @@ router.get('/approved-items', function (req, res) {
 
         res.render('admin/approvedItems', {items: result});
     });
+});
+
+router.post('/add-item', function (req, res) {
+    // TODO: HANDLE INSERTING DUPLICATE PRIMARY KEYS
+    const sql = `
+        INSERT INTO FarmItem
+        VALUES('${req.body.name}', TRUE, '${req.body.type}')`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        res.redirect('approved-items');
+    });
 
 });
+
 
 router.get('/pending-items', function (req, res) {
     let c = req.query.col ? req.query.col : 'Name';

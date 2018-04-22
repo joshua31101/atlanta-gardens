@@ -30,9 +30,27 @@
         </div>
     </form>
 
-    <div>
-        TODO: ADD TO APPROVED LIST
-    </div>
+    <form action="/admin/add-item" method="POST" class="ui form">
+        <div class="field">
+            <label>Add to Approved List</label>
+            <select name="type" class="ui fluid dropdown">
+                <option value="ANIMAL">ANIMAL</option>
+                <option value="FRUIT">FRUIT</option>
+                <option value="FLOWER">FLOWER</option>
+                <option value="VEGETABLE">VEGETABLE</option>
+                <option value="NUT">NUT</option>
+            </select>
+        </div>
+        <div class="field">
+            <div class="ui category search">
+                <div class="ui icon input">
+                    <input name="name" class="prompt" type="text" placeholder="Search..." required>
+                    <i class="search icon"></i>
+                </div>
+                <div class="results"></div>
+            </div>
+        </div>
+    </form>
 
     <table class="ui compact sortable celled striped table">
         <thead>
