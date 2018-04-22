@@ -188,10 +188,14 @@ router.get('/approved-items', function (req, res) {
 });
 
 router.get('/pending-items', function (req, res) {
+    let c = req.query.col ? req.query.col : 'Name';
+    let m = req.query.pattern ? req.query.pattern : '';
+
     const sql = `
         SELECT Name, Type 
         FROM FarmItem
-        WHERE IsApproved=FALSE`;
+        WHERE IsApproved=FALSE AND ${c} LIKE '%${m}%'`;
+
     db.query(sql, function(err, result) {
         if (err) {
             res.status(500).send({error: err});
