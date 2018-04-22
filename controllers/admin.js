@@ -221,11 +221,11 @@ router.get('/pending-items', function (req, res) {
 
 });
 
-router.get('/pending-items/:name', function (req, res) {
+router.get('/items/:name', function (req, res) {
     const sql = `
         SELECT Name, Type 
         FROM FarmItem
-        WHERE IsApproved=FALSE AND Name='${req.params.name}'`;
+        WHERE Name='${req.params.name}'`;
 
     db.query(sql, function(err, result) {
         if (err) {
@@ -248,6 +248,20 @@ router.get('/approve-item/:item', function(req, res) {
         res.render('admin/index', {user: req.session.name});
     });
 });
+
+router.get('/delete-item/:item', function(req, res) {
+    const item = req.params.item;
+    const sql = `DELETE FROM FarmItem WHERE Name='${item}'`;
+    db.query(sql, function(err, result) {
+        if (err) {
+            res.status(500).send({error: err});
+            return;
+        }
+        console.log(result);
+        res.render('admin/index', {user: req.session.name});
+    });
+});
+
 
 
 
