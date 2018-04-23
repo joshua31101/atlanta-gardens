@@ -25,7 +25,7 @@ router.get('/view/:id', function(req, res) {
     const sql1 = `SELECT * FROM
                     (SELECT * FROM AllEmails, AllProperties WHERE AllEmails.Username = AllProperties.Owner) q1
                         LEFT JOIN
-                    (SELECT AnimalCrops.*, VisitNum, AvgRating FROM AnimalCrops, VisitRating WHERE AnimalCrops.PropertyID = VisitRating.PropertyID) q2
+                    (SELECT AnimalCrops.*, VisitNum, AvgRating FROM AnimalCrops, VisitRating WHERE AnimalCrops.PropertyID = VisitRating.ID) q2
                         ON q1.ID = q2.PropertyID WHERE q1.ID = ${propertyId} AND q2.PropertyID = ${propertyId}`;
     const sql2 = `SELECT count(1) AS num FROM Visit WHERE PropertyID = ${propertyId} AND Username = '${username}'`;
     db.query(sql1, function(err, result1) {
@@ -132,12 +132,12 @@ router.post('/new', function(req, res) {
   const username = req.session.username;
 
   if (propertyType === 'FARM') {
-    if (!animal || !crop) {
+    if (!animal.trim() || !crop.trim()) {
       req.flash('error', 'Farm must have an animal and a crop.');
       return res.redirect('new');
     }
   } else {
-    if (!crop) {
+    if (!crop.trim()) {
       req.flash('error', 'Garden or orchard must have a crop.');
       return res.redirect('new');
     }
