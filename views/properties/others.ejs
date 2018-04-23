@@ -39,7 +39,7 @@
             <td><%= properties[i].PropertyType %></td>
             <td><%= properties[i].IsPublic %></td>
             <td><%= properties[i].IsCommercial %></td>
-            <td><%= properties[i].ID %></td>
+            <td><%= String(properties[i].ID).padStart(5, '0') %></td>
             <td><%= properties[i].VisitCount %></td>
             <td><%= properties[i].RatingNum ? properties[i].RatingNum : 'N/A' %></td>
           </tr>

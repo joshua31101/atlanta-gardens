@@ -113,7 +113,7 @@
                   <td>${properties[i].PropertyType}</td>
                   <td>${properties[i].IsPublic}</td>
                   <td>${properties[i].IsCommercial}</td>
-                  <td>${properties[i].ID}</td>
+                  <td>${String(properties[i].ID).padStart(5, '0')}</td>
                   <td>${visitCount}</td>
                   <td>${visitRating}</td>
                   <td><a href="/properties/edit/${properties[i].ID}">Manange property</a></td>

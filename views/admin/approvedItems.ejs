@@ -98,7 +98,7 @@
           for (var i = 0; i < items.length; i++) {
             tableDOM += `
                 <tr>
-                  <td>${items[i].Name}</td>
+                  <td><a href="/admin/items/${items[i].Name}">${items[i].Name}</a></td>
                   <td>${items[i].Type}</td>
                 </tr>
             `;

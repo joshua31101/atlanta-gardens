@@ -42,7 +42,7 @@
         <tbody>
         <% for (var i = 0; i < properties.length; i++) { %>
         <tr>
-            <td ><a href="/admin/owner/<%= properties[i].Username %>"><%= properties[i].ID%></a></td>
+            <td ><a href="/admin/prop/<%= properties[i].ID %>"><%= String(properties[i].ID).padStart(5, '0') %></a></td>
             <td ><%= properties[i].Name %></td>
             <td ><%= properties[i].Size %></td>
             <td ><%= properties[i].IsCommerical %></td>

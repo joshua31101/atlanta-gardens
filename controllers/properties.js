@@ -382,7 +382,8 @@ router.post('/edit/:id', function(req, res) {
       IsPublic = ${isPublic},
       Street = '${streetAddress}',
       City = '${city}',
-      Zip = ${zip}
+      Zip = ${zip},
+      ApprovedBy = NULL
     WHERE ID = ${propertyId}
   `;
   db.query(sql, function(err, result) {
@@ -447,8 +448,16 @@ router.post('/edit/:id', function(req, res) {
           }
         });
       }
-      req.flash('success', 'Successfully updated!');
-      return res.redirect(`/properties/edit/${propertyId}`);
+
+      let sql1 = `DELETE FROM Visit WHERE PropertyID = ${propertyId}`;
+      db.query(sql1, function(er1, addedResult) {
+        if (err) {
+          req.flash('error', er);
+          return res.redirect(`/properties/edit/${propertyId}`);
+        }
+        req.flash('success', 'Successfully updated!');
+        return res.redirect(`/properties/edit/${propertyId}`);
+      });
     });
   });
 });

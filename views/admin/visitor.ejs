@@ -35,7 +35,7 @@
             <tbody>
             <% for (var i = 0; i < visits.length; i++) { %>
             <tr>
-                <td ><a href="/admin/visitor/<%= visitor.Username %>"><%= String(visits[i].PropertyID).padStart(5, '0') %></a></td>
+                <td ><a href="/admin/prop/<%= visits[i].PropertyID %>"><%= String(visits[i].PropertyID).padStart(5, '0') %></a></td>
                 <td ><%= visits[i].VisitDate %></td>
                 <td ><%= visits[i].Rating %></td>
             </tr>
