@@ -108,6 +108,9 @@
         </div>
         <button class="ui fluid large blue submit button" type="submit">Edit property</button>
       </form>
+      <form action="/properties/delete/<%- property.PropertyId %>" method="post">
+        <input class="ui fluid large red submit button" type="submit" value="Delete property">
+      </form>
 
       <div class="ui message">
         <a href="/">Go Back</a>
