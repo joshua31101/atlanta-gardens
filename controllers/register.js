@@ -28,6 +28,7 @@ router.post('/visitor-register', function(req, res) {
         res.redirect('/visitor-register');
         return;
     }
+    req.flash('success', 'Successfully registered!');
     res.redirect('/');
     });
 });
@@ -91,7 +92,7 @@ router.post('/owner-register', function(req, res) {
     return;
   }
 
-  if (propertyType === 'Farm') {
+  if (propertyType === 'FARM') {
     if (!animal || !crop) {
       req.flash('error', 'Farm must have an animal and a crop.');
       res.redirect('/owner-register');
@@ -146,7 +147,7 @@ router.post('/owner-register', function(req, res) {
         return res.redirect('/owner-register');
       }
       const newPropertyId = result.insertId;
-      if (propertyType === 'Farm') {
+      if (propertyType === 'FARM') {
         sql = `INSERT INTO Has VALUES(${newPropertyId},	'${animal}');`
         db.query(sql, function(er, r) {
           if (err) {
@@ -165,6 +166,7 @@ router.post('/owner-register', function(req, res) {
 
       req.session.user_type = 'OWNER';
       req.session.username = username;
+      req.flash('success', 'Successfully registered!');
       return res.redirect('/');
     });
   });

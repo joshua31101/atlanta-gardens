@@ -21,6 +21,17 @@
         </div>
     </h2>
 
+    <% if (locals.messages.error) { %>
+    <div class="ui error message">
+        <%- locals.messages.error %>
+    </div>
+    <% } %>
+    <% if (locals.messages.success) { %>
+    <div class="ui success message">
+        <%- locals.messages.success %>
+    </div>
+    <% } %>
+
     <form action="/admin/confirmed-properties" method="GET" class="ui form">
         <div class="field">
             <label>Search</label>
@@ -98,7 +109,7 @@
         url: `/admin/confirmed-properties/sort?sortBy=${sortCol}&sortOrder=${sortOrder}`,
         method: 'GET',
         success: function(data) {
-          let properties = data.properties;
+          const properties = data.properties;
           let tableDOM = `<tbody>`;
           for (var i = 0; i < properties.length; i++) {
             tableDOM += `

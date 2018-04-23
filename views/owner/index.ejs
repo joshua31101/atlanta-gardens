@@ -12,6 +12,11 @@
         <h2>Your Properties</h2>
       </div>
     </h2>
+    <% if (locals.messages.success) { %>
+      <div class="ui success message">
+        <%- locals.messages.success %>
+      </div>
+    <% } %>
 
     <table class="ui sortable celled table">
       <thead>

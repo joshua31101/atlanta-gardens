@@ -29,20 +29,6 @@
         </div>
         <% } %>
 
-        <form action="/properties/<%- property.PropertyId %>/crop/new" method="post">
-            <div class="field">
-                <label>Request crop approval</label>
-                <input type="text" name="cropName" placeholder="Enter a new crop" required>
-                <select name="cropType" required>
-                    <option value="FRUIT">Fruit</option>
-                    <option value="NUT">Nut</option>
-                    <option value="FLOWER">Flower</option>
-                    <option value="VEGETABLE">Vegetable</option>
-                </select>
-            </div>
-            <input type="submit" value="Submit Request">
-        </form>
-
         <form action="/admin/edit/<%- property.PropertyId %>" method="post" class="ui form">
             <input type="hidden" name="propertyType" value="<%- property.PropertyType %>">
             <div class="field">
@@ -105,7 +91,7 @@
                     <option value="false" <% if (!property.IsCommercial) { %>selected<% } %> >No</option>
                 </select>
             </div>
-            <button class="ui fluid large blue submit button" type="submit">Save Changes</button>
+            <button class="ui fluid large blue submit button" type="submit">Save Changes/Confirm Property</button>
         </form>
 
         <div class="ui">

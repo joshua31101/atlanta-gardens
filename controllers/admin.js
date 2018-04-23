@@ -10,7 +10,7 @@ router.get('/view-visitors', function(req, res) {
     let c = req.query.col ? req.query.col : 'Username';
     let m = req.query.pattern ? req.query.pattern : '';
     let sql = `
-        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits 
+        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits
         FROM User
         WHERE UserType='VISITOR' AND ${c} LIKE '%${m}%'`;
 
@@ -59,7 +59,7 @@ router.get('/visitors/sort', function(req, res) {
 router.get('/visitor/:visitor', function(req, res) {
   const visitorUsername = req.params.visitor;
     const sql = `
-        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits 
+        SELECT Username, Email, (SELECT COUNT(*) FROM Visit WHERE Visit.Username=User.Username) as visits
         FROM User
         WHERE User.UserType="VISITOR" AND User.Username = '${visitorUsername}' `;
     const sqlVisits = `
@@ -158,7 +158,7 @@ router.get('/owners/sort', function(req, res) {
 router.get('/owner/:owner', function(req, res) {
     const ownerUsername = req.params.owner;
     const sql = `
-        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) as properties 
+        SELECT Username, Email, (SELECT COUNT(*) FROM Property WHERE Property.Owner=User.Username) as properties
         FROM User
         WHERE User.Username = '${ownerUsername}'`;
     const sqlProperties = `
@@ -285,7 +285,7 @@ router.get('/approved-items', function (req, res) {
     let m = req.query.pattern ? req.query.pattern : '';
 
     const sql = `
-        SELECT Name, Type 
+        SELECT Name, Type
         FROM FarmItem
         WHERE IsApproved=TRUE AND ${c} LIKE '%${m}%'`;
     db.query(sql, function(err, result) {
@@ -403,22 +403,30 @@ router.post('/edit/:id', function(req, res) {
     const propertyId = Number(req.params.id);
     const username = req.session.username;
 
-    if (typeof animals === 'string') {
+    if (animals) {
+      if (typeof animals === 'string') {
         animals = [animals];
+      }
+    } else {
+      animals = [];
     }
-    if (typeof crops === 'string') {
+    if (crops) {
+      if (typeof crops === 'string') {
         crops = [crops];
+      }
+    } else {
+      crops = [];
     }
 
     if (propertyType === 'FARM') {
         if (!animals || !crops || (animals && !animals.length) || (crops && !crops.length)) {
             req.flash('error', 'Farm must have both an animal and a crop.');
-            return res.redirect(`/properties/edit/${propertyId}`);
+            return res.redirect(`/admin/prop/${propertyId}`);
         }
     } else {
         if (!crops || (crops && !crops.length)) {
             req.flash('error', 'Garden or orchard must have a crop.');
-            return res.redirect(`/properties/edit/${propertyId}`);
+            return res.redirect(`/admin/prop/${propertyId}`);
         }
     }
 
@@ -439,7 +447,7 @@ router.post('/edit/:id', function(req, res) {
     db.query(sql, function(err, result) {
         if (err) {
             req.flash('error', err.message);
-            return res.redirect(`/properties/edit/${propertyId}`);
+            return res.redirect(`/admin/prop/${propertyId}`);
         }
 
         let removedItems = [];
@@ -449,7 +457,7 @@ router.post('/edit/:id', function(req, res) {
         db.query(sql, function(er, hasResult) {
             if (er) {
                 req.flash('error', er);
-                return res.redirect(`/properties/edit/${propertyId}`);
+                return res.redirect(`/admin/prop/${propertyId}`);
             }
             hasResult.forEach(function(has) {
                 items[has.ItemName] = 0;
@@ -480,7 +488,7 @@ router.post('/edit/:id', function(req, res) {
                 db.query(sql, [deletedItems], function(er1, deletedResult) {
                     if (err) {
                         req.flash('error', er);
-                        return res.redirect(`/properties/edit/${propertyId}`);
+                        return res.redirect(`/admin/prop/${propertyId}`);
                     }
                 });
             }
@@ -494,7 +502,7 @@ router.post('/edit/:id', function(req, res) {
                 db.query(sql, [addedItems], function(er1, addedResult) {
                     if (err) {
                         req.flash('error', er);
-                        return res.redirect(`/properties/edit/${propertyId}`);
+                        return res.redirect(`/admin/prop/${propertyId}`);
                     }
                 });
             }
@@ -505,7 +513,7 @@ router.post('/edit/:id', function(req, res) {
                 WHERE PropertyID=${propertyId}
             `;
             db.query(sqlVisit, function (err, result) {
-                req.flash('success', 'Successfully updated!');
+                req.flash('success', 'Successfully updated/confirmed!');
                 return res.redirect(`/admin/confirmed-properties`);
             });
         });
@@ -533,7 +541,7 @@ router.get('/pending-items', function (req, res) {
     let m = req.query.pattern ? req.query.pattern : '';
 
     const sql = `
-        SELECT Name, Type 
+        SELECT Name, Type
         FROM FarmItem
         WHERE IsApproved=FALSE AND ${c} LIKE '%${m}%'`;
 
@@ -563,7 +571,7 @@ router.get('/pending-items/sort', function (req, res) {
 
 router.get('/items/:name', function (req, res) {
     const sql = `
-        SELECT Name, Type 
+        SELECT Name, Type
         FROM FarmItem
         WHERE Name='${req.params.name}'`;
 
@@ -602,10 +610,10 @@ router.get('/delete-item/:item', function(req, res) {
             type = 'animals';
         }
         let sql = `
-        SELECT * FROM 
-        (SELECT id, SUM(case when Type = 'Animal' Then 1 Else 0 end) as animals, sum(case when Type != 'Animal' then 1 else 0 end) as crops from (SELECT id, ItemName, Type FROM 
-        (SELECT PropertyID as id from Has Where ItemName = '${item}') q1 Inner Join (SELECT PropertyID, ItemName, 
-        Type From Has, FarmItem Where Has.ItemName = FarmItem.Name) q2 
+        SELECT * FROM
+        (SELECT id, SUM(case when Type = 'Animal' Then 1 Else 0 end) as animals, sum(case when Type != 'Animal' then 1 else 0 end) as crops from (SELECT id, ItemName, Type FROM
+        (SELECT PropertyID as id from Has Where ItemName = '${item}') q1 Inner Join (SELECT PropertyID, ItemName,
+        Type From Has, FarmItem Where Has.ItemName = FarmItem.Name) q2
         ON q1.id= q2.PropertyID Order By q1.id) q3 group by id) as Q
         WHERE Q.${type} = 1;
         `;

@@ -109,12 +109,12 @@
     var $animalOptions = $('#animalField option');
     $('#propertyType').change(function(e) {
       var selectedValue = $(this).val();
-      if (selectedValue === 'Garden') {
+      if (selectedValue === 'GARDEN') {
         $animalOptions.prop("selected", false);
         $animalField.hide();
         $gardenCropOptions.prop("selected", false).hide();
         $orchardCropOptions.show();
-      } else if (selectedValue === 'Orchard') {
+      } else if (selectedValue === 'ORCHARD') {
         $animalOptions.prop("selected", false);
         $animalField.hide();
         $gardenCropOptions.show();
