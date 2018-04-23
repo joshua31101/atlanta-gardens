@@ -345,11 +345,19 @@ router.post('/edit/:id', function(req, res) {
   const propertyId = Number(req.params.id);
   const username = req.session.username;
 
-  if (typeof animals === 'string') {
-    animals = [animals];
+  if (animals) {
+    if (typeof animals === 'string') {
+      animals = [animals];
+    }
+  } else {
+    animals = [];
   }
-  if (typeof crops === 'string') {
-    crops = [crops];
+  if (crops) {
+    if (typeof crops === 'string') {
+      crops = [crops];
+    }
+  } else {
+    crops = [];
   }
 
   if (propertyType === 'FARM') {
