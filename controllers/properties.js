@@ -25,7 +25,7 @@ router.get('/view/:id', function(req, res) {
     const sql1 = `SELECT * FROM
                     (SELECT * FROM AllEmails, AllProperties WHERE AllEmails.Username = AllProperties.Owner) q1
                         LEFT JOIN
-                    (SELECT AnimalCrops.*, VisitNum, AvgRating FROM AnimalCrops, VisitRating WHERE AnimalCrops.PropertyID = VisitRating.PropertyID) q2
+                    (SELECT AnimalCrops.*, VisitNum, AvgRating FROM AnimalCrops, VisitRating WHERE AnimalCrops.PropertyID = VisitRating.ID) q2
                         ON q1.ID = q2.PropertyID WHERE q1.ID = ${propertyId} AND q2.PropertyID = ${propertyId}`;
     const sql2 = `SELECT count(1) AS num FROM Visit WHERE PropertyID = ${propertyId} AND Username = '${username}'`;
     db.query(sql1, function(err, result1) {
@@ -33,6 +33,7 @@ router.get('/view/:id', function(req, res) {
             res.status(500).send({error: err});
             return;
         }
+        console.log(result1);
         db.query(sql2, function(err, result2) {
             if (err) {
                 res.status(500).send({error: err});
