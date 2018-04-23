@@ -594,7 +594,8 @@ router.get('/delete-item/:item', function(req, res) {
     let typeSql = `SELECT Type FROM FarmItem WHERE Name='${item}'`;
     db.query(typeSql, function(err, result) {
         if (err) {
-            req.flash('error', 'FIRST ERROR');
+            req.flash('error', err);
+            res.redirect(`/admin/items/${item}`);
         }
         let type = 'crops';
         if (result[0].Type.toLowerCase() === 'animal') {
@@ -610,14 +611,15 @@ router.get('/delete-item/:item', function(req, res) {
         `;
         db.query(sql, function(err, result1) {
             if (err) {
-                req.flash('error', 'SECOND ERROR');
+                req.flash('error', err);
+                res.redirect(`/admin/items/${item}`);
             }
             if (result1.length === 0) {
                 const sql = `DELETE FROM FarmItem WHERE Name='${item}'`;
                 db.query(sql, function(err, result) {
                     if (err) {
-                        res.status(500).send({error: err});
-                        return;
+                        req.flash('error', err);
+                        res.redirect(`/admin/items/${item}`);
                     }
                     console.log(result);
                     req.flash('success', 'Successfully deleted!');
