@@ -6,7 +6,13 @@ router.get('/sort', function(req, res) {
   const sortByCol = req.query.sortBy;
   const sortOrder = req.query.sortOrder;
   const username = req.session.username;
-  let sql = `SELECT * FROM Property WHERE Owner='${username}' ORDER BY ${sortByCol} ${sortOrder}`;
+  const sql = `
+  SELECT * FROM
+    (SELECT * FROM
+                  (SELECT * FROM Property WHERE Owner = '${username}') q1
+                      LEFT JOIN
+                  (SELECT Visit.PropertyID, count(Visit.PropertyID) AS VisitCount, avg(Visit.Rating) AS RatingNum FROM Visit GROUP BY Visit.PropertyID) q2
+                      ON q1.ID = q2.PropertyID) AS P ORDER BY ${sortByCol} ${sortOrder}`;
   db.query(sql, function(err, result) {
     if (err) {
       return res.status(200).send(err.message);
@@ -91,16 +97,6 @@ router.get('/view', function(req, res) {
       res.render('visitor/index', {propertiesList: result, user: username});
     });
 });
-
-router.get('/sort', function(req, res) {
-    const value = req.query.name;
-    console.log(value);
-    const sql = `SELECT * FROM
-                    (SELECT * FROM Property WHERE IsPublic = True AND ApprovedBy IS NOT NULL) q1
-                        LEFT JOIN
-                    (SELECT Visit.PropertyID, count(Visit.PropertyID) AS VisitCount, avg(Visit.Rating) AS RatingNum FROM Visit GROUP BY Visit.PropertyID) q2
-                        ON q1.ID = q2.PropertyID ORDER BY `;
-})
 
 router.get('/new', function(req, res) {
   const farmItemQuery = `SELECT * FROM FarmItem WHERE IsApproved=1 ORDER BY Type`;

@@ -25,8 +25,8 @@
           <th data-sort-column="IsPublic" data-sort-asc="true">Public</th>
           <th data-sort-column="IsCommercial" data-sort-asc="true">Commercial</th>
           <th data-sort-column="ID" data-sort-asc="true">ID</th>
-          <th data-sort-column="Visits" data-sort-asc="true">Visits</th>
-          <th data-sort-column="AvgRating" data-sort-asc="true">Avg Rating</th>
+          <th data-sort-column="VisitCount" data-sort-asc="true">Visits</th>
+          <th data-sort-column="RatingNum" data-sort-asc="true">Avg Rating</th>
           <th>Edit</th>
         </tr>
       </thead>
@@ -95,6 +95,7 @@
           let properties = data.properties;
           let tableDOM = `<tbody>`;
           for (var i = 0; i < properties.length; i++) {
+            console.log(properties);
             let visitCount = properties[i].VisitCount ? properties[i].VisitCount : 0;
             let visitRating = properties[i].RatingNum ? properties[i].RatingNum : 'N/A';
             tableDOM += `
