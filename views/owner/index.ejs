@@ -41,7 +41,7 @@
             <td><%= properties[i].PropertyType %></td>
             <td><%= properties[i].IsPublic %></td>
             <td><%= properties[i].IsCommercial %></td>
-            <td><%= properties[i].ID %></td>
+            <td><%= String(properties[i].ID).padStart(5, '0') %></td>
             <td><%= properties[i].VisitCount ? properties[i].VisitCount : 0 %></td>
             <td><%= properties[i].RatingNum ? properties[i].RatingNum : 'N/A' %></td>
             <td><a href="/properties/edit/<%= properties[i].ID %>">Manage property</a></td>
@@ -89,7 +89,7 @@
       const sortOrder = isAsc ? 'asc' : 'desc';
       $this.data('sortAsc', !isAsc);
       $.ajax({
-        url: `/owner/properties/sort?sortBy=${sortCol}&sortOrder=${sortOrder}`,
+        url: `/properties/sort?sortBy=${sortCol}&sortOrder=${sortOrder}`,
         method: 'GET',
         success: function(data) {
           let properties = data.properties;
