@@ -64,7 +64,6 @@
     <table class="ui compact sortable celled striped table">
         <thead>
         <tr>
-            <th></th>
             <th data-sort-column="Name" data-sort-asc="true">Name</th>
             <th data-sort-column="Type" data-sort-asc="true">Type</th>
         </tr>
@@ -72,11 +71,6 @@
         <tbody>
         <% for (var i = 0; i < items.length; i++) { %>
         <tr>
-            <td class="collapsing">
-                <div class="ui fitted slider checkbox">
-                    <input type="checkbox"><label></label>
-                </div>
-            </td>
             <td ><a href="/admin/items/<%= items[i].Name %>"><%= items[i].Name %></a></td>
             <td ><%= items[i].Type %></td>
         </tr>
@@ -104,11 +98,6 @@
           for (var i = 0; i < items.length; i++) {
             tableDOM += `
                 <tr>
-                  <td class="collapsing">
-                      <div class="ui fitted slider checkbox">
-                          <input type="checkbox"><label></label>
-                      </div>
-                  </td>
                   <td>${items[i].Name}</td>
                   <td>${items[i].Type}</td>
                 </tr>
