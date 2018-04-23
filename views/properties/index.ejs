@@ -58,7 +58,7 @@
         <h2 align="left">Type: <%= property[0].PropertyType %></h2>
         <h2 align="left">Public: <%= property[0].IsPublic %></h2>
         <h2 align="left">Commercial: <%= property[0].IsCommercial %></h2>
-        <h2 align="left">ID: <%= property[0].ID %></h2>
+        <h2 align="left">ID: <%= String(property[0].ID).padStart(5, "0") %></h2>
         <h2 align="left">Animals:
             <% for (var i = 0; i < property.length; i++) { %>
                 <% if (property[i].Type === 'ANIMAL') { %>
