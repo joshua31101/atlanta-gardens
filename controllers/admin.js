@@ -215,7 +215,7 @@ router.get('/confirmed-properties/sort', function (req, res) {
   const sortByCol = req.query.sortBy;
   const sortOrder = req.query.sortOrder;
   const sql = `
-    SELECT p.*, AVG(v.Rating) as AvgRating
+    SELECT p.*, AVG(v.Rating) as avgRating
     FROM Property AS p
     LEFT JOIN Visit AS v ON p.ID = v.PropertyID
     WHERE p.ApprovedBy IS NOT NULL
