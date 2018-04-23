@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../partials/head %>
+</head>
+<style>
+    .rating {
+        float:left;
+        width:300px;
+    }
+    .rating span { float:right; position:relative; }
+    .rating span input {
+        position:absolute;
+        top:0px;
+        left:0px;
+        opacity:0;
+    }
+    .rating span label {
+        display:inline-block;
+        width:30px;
+        height:30px;
+        text-align:center;
+        color:#FFF;
+        background:#ccc;
+        font-size:30px;
+        margin-right:2px;
+        line-height:30px;
+        border-radius:50%;
+        -webkit-border-radius:50%;
+    }
+    .rating span:hover ~ span label,
+    .rating span:hover label,
+    .rating span.checked label,
+    .rating span.checked ~ span label {
+        background:#F90;
+        color:#FFF;
+    }
+</style>
+<body>
+  <% include ../partials/header %>
+  <div class="ui center aligned grid ui basic segment">
+    <h2 class="ui blue header">
+      <div class="content">
+        <h1>Property Details</h1>
+      </div>
+    </h2>
+    <div class="ui left floated segment">
+        <h2 align="left">Name: <%= property[0].Name %></h2>
+        <h2 align="left">Owner: <%= property[0].Owner %></h2>
+        <h2 align="left">Owner Email: <%= property[0].Email %></h2>
+        <h2 align="left">Visits: <%= property[0].VisitNum %></h2>
+        <h2 align="left">Address: <%= property[0].Street %></h2>
+        <h2 align="left">City: <%= property[0].City %></h2>
+        <h2 align="left">Zip: <%= property[0].Zip %></h2>
+        <h2 align="left">Size (acres): <%= property[0].Size %></h2>
+        <h2 align="left">Avg Rating: <%= property[0].AvgRating %></h2>
+        <h2 align="left">Type: <%= property[0].PropertyType %></h2>
+        <h2 align="left">Public: <%= property[0].IsPublic %></h2>
+        <h2 align="left">Commercial: <%= property[0].IsCommercial %></h2>
+        <h2 align="left">ID: <%= String(property[0].ID).padStart(5, "0") %></h2>
+        <h2 align="left">Animals:
+            <% for (var i = 0; i < property.length; i++) { %>
+                <% if (property[i].Type === 'ANIMAL') { %>
+                    <li><%= property[i].ItemName %></li>
+                <% } %>
+            <% } %>
+        </h2>
+        <h2 align="left">Crops:
+            <% for (var i = 0; i < property.length; i++) { %>
+                <% if (property[i].Type !== 'ANIMAL') { %>
+                    <li><%= property[i].ItemName %></li>
+                <% } %>
+            <% } %>
+        </h2>
+    </div>
+  </div>
+<% if (type === 'VISITOR') { %>
+  <% if (hasLogged) { %>
+      <form action="/properties/visit-unlog" method="post">
+          <input type="hidden" name="propertyId" value="<%= property[0].ID %>">
+          <input type="submit" class="ui button" value="Un-Log Visit">
+      </form>
+  <% } else { %>
+      <form action="/properties/visit-rating" method="post">
+          <input type="hidden" name="propertyId" value="<%= property[0].ID %>">
+          <div class="rating">
+              <span><input type="radio" name="rating" id="str5" value="5"><label for="str5"></label></span>
+              <span><input type="radio" name="rating" id="str4" value="4"><label for="str4"></label></span>
+              <span><input type="radio" name="rating" id="str3" value="3"><label for="str3"></label></span>
+              <span><input type="radio" name="rating" id="str2" value="2"><label for="str2"></label></span>
+              <span><input type="radio" name="rating" id="str1" value="1"><label for="str1"></label></span>
+          </div>
+          <input type="submit" class="ui button" value="Log Visit">
+      </form>
+  <% } %>
+<% } %>
+</body>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+    // Check Radio-box
+    $(".rating input:radio").attr("checked", false);
+
+    $('.rating input').click(function () {
+        $(".rating span").removeClass('checked');
+        $(this).parent().addClass('checked');
+    });
+    //
+    // $('input:radio').change(
+    //   function(){
+    //     var userRating = this.value;
+    //     // var strLink ="/properties/<%= property.ID %>?rating="+userRating
+    //     // document.getElementById("log").setAttribute("href",strLink);
+    // });
+});
+</script>
+</html>

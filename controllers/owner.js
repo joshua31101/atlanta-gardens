@@ -2,6 +2,34 @@ const express = require('express');
 const router = express.Router();
 const db = require('./db');
 
+router.get('/properties/:id', function(req, res) {
+  const propertyId = req.params.id;
+  const username = req.session.username;
+  const usertype = req.session.user_type;
+  var logged = 0;
+  const sql1 = `SELECT * FROM
+                  (SELECT * FROM AllEmails, Property WHERE AllEmails.Username = Property.Owner) q1
+                      LEFT JOIN
+                  (SELECT AnimalCrops.*, VisitNum, AvgRating FROM AnimalCrops, OwnerRating WHERE AnimalCrops.PropertyID = OwnerRating.ID) q2
+                      ON q1.ID = q2.PropertyID WHERE q1.ID = ${propertyId} AND q2.PropertyID = ${propertyId}`;
+  const sql2 = `SELECT count(1) AS num FROM Visit WHERE PropertyID = ${propertyId} AND Username = '${username}'`;
+  db.query(sql1, function(err, result1) {
+      if (err) {
+          res.status(500).send({error: err});
+          return;
+      }
+      console.log(result1);
+      db.query(sql2, function(err, result2) {
+          if (err) {
+              res.status(500).send({error: err});
+              return;
+          }
+          logged = result2[0].num;
+      res.render('owner/properties', {property: result1, hasLogged: logged, type: usertype});
+      });
+  });
+});
+
 
 router.get('/view-properties', function(req, res) {
     const username = req.session.username;

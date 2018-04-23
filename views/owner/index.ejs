@@ -33,7 +33,7 @@
       <tbody>
         <% for (var i = 0; i < properties.length; i++) { %>
           <tr>
-            <td><a href="/properties/view/<%= properties[i].ID %>"><%= properties[i].Name %></a></td>
+            <td><a href="/owner/properties/<%= properties[i].ID %>"><%= properties[i].Name %></a></td>
             <td><%= properties[i].Street %></td>
             <td><%= properties[i].City %></td>
             <td><%= properties[i].Zip %></td>
@@ -89,7 +89,7 @@
       const sortOrder = isAsc ? 'asc' : 'desc';
       $this.data('sortAsc', !isAsc);
       $.ajax({
-        url: `/properties/sort?sortBy=${sortCol}&sortOrder=${sortOrder}`,
+        url: `/owner/properties/sort?sortBy=${sortCol}&sortOrder=${sortOrder}`,
         method: 'GET',
         success: function(data) {
           let properties = data.properties;
