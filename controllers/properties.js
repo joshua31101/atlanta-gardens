@@ -26,7 +26,7 @@ router.post('/delete/:id', function(req, res) {
       return res.redirect('new');
     }
     req.flash('success', 'Successfully deleted!');
-    return res.redirect('new');
+    return res.redirect('/');
   });
 });
 
