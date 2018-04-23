@@ -95,8 +95,8 @@
           let properties = data.properties;
           let tableDOM = `<tbody>`;
           for (var i = 0; i < properties.length; i++) {
-            let visitCount = properties[i].Visit_count ? properties[i].Visit_count : 0;
-            let visitRating = properties[i].Visit_rating ? properties[i].Visit_rating : 'N/A';
+            let visitCount = properties[i].VisitCount ? properties[i].VisitCount : 0;
+            let visitRating = properties[i].RatingNum ? properties[i].RatingNum : 'N/A';
             tableDOM += `
                 <tr>
                   <td><a href="/properties/view/${properties[i].ID}">${properties[i].Name}</a></td>
