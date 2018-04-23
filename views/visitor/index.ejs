@@ -32,7 +32,7 @@
             <% for (var i = 0; i < propertiesList.length; i++) { %>
               <tr>
                 <td ><a href="/properties/view/<%= propertiesList[i].ID %>"><%= propertiesList[i].Name %></a></td>
-                <td><%= propertiesList[i].Street %></a></td>
+                <td><%= propertiesList[i].Street %></td>
                 <td><%= propertiesList[i].City %></td>
                 <td><%= propertiesList[i].Zip %></td>
                 <td><%= propertiesList[i].Size %></td>
@@ -40,13 +40,8 @@
                 <td><%= propertiesList[i].IsPublic %></td>
                 <td><%= propertiesList[i].IsCommercial %></td>
                 <td><%= String(propertiesList[i].ID).padStart(5, "0") %></td>
-<<<<<<< HEAD
-                <td><%= propertiesList[i].VisitCount ? propertiesList[i].VisitCount : '0' %></td>
-                <td><%= propertiesList[i].RatingNum ? propertiesList[i].RatingNum: 'N/A' %></td>
-=======
                 <td><%= propertiesList[i].VisitCount ? propertiesList[i].VisitCount : 0 %></td>
                 <td><%= propertiesList[i].RatingNum ? propertiesList[i].RatingNum : 'N/A' %></td>
->>>>>>> 5e7271b20ec6437f7c26dc8bcb1dcab4a1a637ed
               </tr>
             <% } %>
           </tbody>

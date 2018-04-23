@@ -146,12 +146,12 @@ router.post('/new', function(req, res) {
   const username = req.session.username;
 
   if (propertyType === 'FARM') {
-    if (!animal || !crop) {
+    if (!animal.trim() || !crop.trim()) {
       req.flash('error', 'Farm must have an animal and a crop.');
       return res.redirect('new');
     }
   } else {
-    if (!crop) {
+    if (!crop.trim()) {
       req.flash('error', 'Garden or orchard must have a crop.');
       return res.redirect('new');
     }
