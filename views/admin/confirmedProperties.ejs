@@ -60,6 +60,7 @@
           <th data-sort-column="PropertyType" data-sort-asc="true">Type</th>
           <th data-sort-column="IsPublic" data-sort-asc="true">Public</th>
           <th data-sort-column="IsCommercial" data-sort-asc="true">Commercial</th>
+          <th data-sort-column="ID" data-sort-asc="true">ID</th>
           <th data-sort-column="ApprovedBy" data-sort-asc="true">Verified By</th>
           <th data-sort-column="AvgRating" data-sort-asc="true">Avg Rating</th>
         </tr>
@@ -75,9 +76,9 @@
             <td ><%= properties[i].PropertyType %></td>
             <td ><%= properties[i].IsPublic %></td>
             <td ><%= properties[i].IsCommercial %></td>
-            <td ><%= properties[i].ID %></td>
+            <td ><%= String(properties[i].ID).padStart(5, "0") %></td>
             <td ><%= properties[i].ApprovedBy %></td>
-            <td ><%= properties[i].AvgRating %></td>
+            <td ><%= properties[i].avgRating %></td>
         </tr>
         <% } %>
         </tbody>
@@ -110,8 +111,9 @@
                 <td>${properties[i].PropertyType}</td>
                 <td>${properties[i].IsPublic}</td>
                 <td>${properties[i].IsCommercial}</td>
-                <td>${properties[i].ID}</td>
-                <td>${properties[i].Owner}</td>
+                <td>${String(properties[i].ID).padStart(5, "0")}</td>
+                <td>${properties[i].ApprovedBy}</td>
+                <td>${properties[i].avgRating ? properties[i].avgRating : 0}</td>
               </tr>
             `;
           }

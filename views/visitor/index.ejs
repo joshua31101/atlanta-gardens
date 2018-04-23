@@ -40,8 +40,13 @@
                 <td><%= propertiesList[i].IsPublic %></td>
                 <td><%= propertiesList[i].IsCommercial %></td>
                 <td><%= String(propertiesList[i].ID).padStart(5, "0") %></td>
+<<<<<<< HEAD
                 <td><%= propertiesList[i].VisitCount ? propertiesList[i].VisitCount : '0' %></td>
                 <td><%= propertiesList[i].RatingNum ? propertiesList[i].RatingNum: 'N/A' %></td>
+=======
+                <td><%= propertiesList[i].VisitCount ? propertiesList[i].VisitCount : 0 %></td>
+                <td><%= propertiesList[i].RatingNum ? propertiesList[i].RatingNum : 'N/A' %></td>
+>>>>>>> 5e7271b20ec6437f7c26dc8bcb1dcab4a1a637ed
               </tr>
             <% } %>
           </tbody>
@@ -52,7 +57,7 @@
                 <select name="col" class="ui fluid dropdown">
                     <option value="Name">Name</option>
                     <option value="City">City</option>
-                    <option value="Type">Type</option>
+                    <option value="PropertyType">Type</option>
                     <option value="VisitCount">Visits</option>
                     <option value="RatingNum">Avg. Rating</option>
                 </select>
@@ -89,6 +94,7 @@
           for (var i = 0; i < properties.length; i++) {
             let visitCount = properties[i].VisitCount ? properties[i].VisitCount : 0;
             let visitRating = properties[i].RatingNum ? properties[i].RatingNum : 'N/A';
+
             tableDOM += `
                 <tr>
                   <td><a href="/properties/view/${properties[i].ID}">${properties[i].Name}</a></td>
@@ -99,7 +105,7 @@
                   <td>${properties[i].PropertyType}</td>
                   <td>${properties[i].IsPublic}</td>
                   <td>${properties[i].IsCommercial}</td>
-                  <td>${properties[i].ID}</td>
+                  <td>${String(properties[i].ID).padStart(5, "0")}</td>
                   <td>${visitCount}</td>
                   <td>${visitRating}</td>
                 </tr>

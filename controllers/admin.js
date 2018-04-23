@@ -215,7 +215,7 @@ router.get('/confirmed-properties/sort', function (req, res) {
   const sortByCol = req.query.sortBy;
   const sortOrder = req.query.sortOrder;
   const sql = `
-    SELECT p.*, AVG(v.Rating) as AvgRating
+    SELECT p.*, AVG(v.Rating) as avgRating
     FROM Property AS p
     LEFT JOIN Visit AS v ON p.ID = v.PropertyID
     WHERE p.ApprovedBy IS NOT NULL
@@ -594,7 +594,8 @@ router.get('/delete-item/:item', function(req, res) {
     let typeSql = `SELECT Type FROM FarmItem WHERE Name='${item}'`;
     db.query(typeSql, function(err, result) {
         if (err) {
-            req.flash('error', 'FIRST ERROR');
+            req.flash('error', err);
+            res.redirect(`/admin/items/${item}`);
         }
         let type = 'crops';
         if (result[0].Type.toLowerCase() === 'animal') {
@@ -610,14 +611,15 @@ router.get('/delete-item/:item', function(req, res) {
         `;
         db.query(sql, function(err, result1) {
             if (err) {
-                req.flash('error', 'SECOND ERROR');
+                req.flash('error', err);
+                res.redirect(`/admin/items/${item}`);
             }
             if (result1.length === 0) {
                 const sql = `DELETE FROM FarmItem WHERE Name='${item}'`;
                 db.query(sql, function(err, result) {
                     if (err) {
-                        res.status(500).send({error: err});
-                        return;
+                        req.flash('error', err);
+                        res.redirect(`/admin/items/${item}`);
                     }
                     console.log(result);
                     req.flash('success', 'Successfully deleted!');
