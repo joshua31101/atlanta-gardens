@@ -591,14 +591,43 @@ router.get('/approve-item/:item', function(req, res) {
 
 router.get('/delete-item/:item', function(req, res) {
     const item = req.params.item;
-    const sql = `DELETE FROM FarmItem WHERE Name='${item}'`;
-    db.query(sql, function(err, result) {
+    let typeSql = `SELECT Type FROM FarmItem WHERE Name='${item}'`;
+    db.query(typeSql, function(err, result) {
         if (err) {
-            res.status(500).send({error: err});
-            return;
+            req.flash('error', 'FIRST ERROR');
         }
-        console.log(result);
-        res.render('admin/index', {user: req.session.name});
+        let type = 'crops';
+        if (result[0].Type.toLowerCase() === 'animal') {
+            type = 'animals';
+        }
+        let sql = `
+        SELECT * FROM 
+        (SELECT id, SUM(case when Type = 'Animal' Then 1 Else 0 end) as animals, sum(case when Type != 'Animal' then 1 else 0 end) as crops from (SELECT id, ItemName, Type FROM 
+        (SELECT PropertyID as id from Has Where ItemName = '${item}') q1 Inner Join (SELECT PropertyID, ItemName, 
+        Type From Has, FarmItem Where Has.ItemName = FarmItem.Name) q2 
+        ON q1.id= q2.PropertyID Order By q1.id) q3 group by id) as Q
+        WHERE Q.${type} = 1;
+        `;
+        db.query(sql, function(err, result1) {
+            if (err) {
+                req.flash('error', 'SECOND ERROR');
+            }
+            if (result1.length === 0) {
+                const sql = `DELETE FROM FarmItem WHERE Name='${item}'`;
+                db.query(sql, function(err, result) {
+                    if (err) {
+                        res.status(500).send({error: err});
+                        return;
+                    }
+                    console.log(result);
+                    req.flash('success', 'Successfully deleted!');
+                    res.render('admin/index', {user: req.session.name});
+                });
+            } else {
+                req.flash('error', 'Property 1 item thing');
+                res.redirect(`/admin/items/${item}`);
+            }
+        });
     });
 });
 
