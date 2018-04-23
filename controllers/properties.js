@@ -17,6 +17,19 @@ router.get('/sort', function(req, res) {
   });
 });
 
+router.post('/delete/:id', function(req, res) {
+  const propertyId = req.params.id;
+  const sql = `DELETE FROM Property WHERE ID = ${propertyId}`;
+  db.query(sql, function(err, result) {
+    if (err) {
+      req.flash('error', err.message);
+      return res.redirect('new');
+    }
+    req.flash('success', 'Successfully deleted!');
+    return res.redirect('new');
+  });
+});
+
 router.get('/view/:id', function(req, res) {
     const propertyId = req.params.id;
     const username = req.session.username;
